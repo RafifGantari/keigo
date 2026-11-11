@@ -1,76 +1,48 @@
 import os
+import io
 import textwrap
 from pathlib import Path
-from typing import List, Optional
-from PIL import Image, ImageDraw, ImageFont
+from typing import List, Optional, Union
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 # ==============================================================================
-# KEIGO DESIGN SYSTEM PALETTE
+# KEIGO ARCTIC INTELLIGENCE PALETTE
 # ==============================================================================
-COLOR_BG = (16, 20, 38)            # Deep Midnight Navy #101426
-COLOR_CARD_BG = (24, 31, 56)       # Dark Slate #181F38
-COLOR_CARD_BORDER = (45, 55, 92)   # Card Border #2D375C
-COLOR_TEXT_WHITE = (248, 250, 252) # Off-White #F8FAFC
-COLOR_TEXT_MUTED = (160, 174, 192) # Slate Muted #A0AEC0
-COLOR_CYAN = (34, 211, 238)        # Neon Cyan #22D3EE
-COLOR_VIOLET = (139, 92, 246)      # Electric Violet #8B5CF6
+COLOR_SNOW_WHITE   = (248, 250, 252) # #F8FAFC (Latar Belakang)
+COLOR_DEEP_NAVY    = (23, 37, 84)    # #172554 (Teks Utama & Heading)
+COLOR_ARCTIC_BLUE  = (37, 99, 235)   # #2563EB (Aksen Utama)
+COLOR_ICE_CYAN     = (186, 230, 253) # #BAE6FD (Aksen Sekunder / Pill)
+COLOR_COOL_GRAY    = (100, 116, 139) # #64748B (Teks Sekunder)
+COLOR_CARD_WHITE   = (255, 255, 255) # Pure White untuk Container
+COLOR_CARD_BORDER  = (226, 232, 240) # #E2E8F0 Garis Tepi Halus
 
-CATEGORY_THEMES = {
-    "artificial_intelligence": {
-        "label": "ARTIFICIAL INTELLIGENCE",
-        "accent": (34, 211, 238),    # Neon Cyan
-        "secondary": (139, 92, 246), # Electric Violet
-    },
-    "technology": {
-        "label": "TECHNOLOGY",
-        "accent": (56, 189, 248),    # Sky Blue
-        "secondary": (99, 102, 241), # Indigo
-    },
-    "science": {
-        "label": "SCIENCE",
-        "accent": (52, 211, 153),    # Emerald Mint
-        "secondary": (34, 211, 238), # Cyan
-    },
-    "innovation": {
-        "label": "INNOVATION",
-        "accent": (244, 114, 182),   # Pink Glow
-        "secondary": (139, 92, 246), # Violet
-    },
-}
+FONTS_DIR = Path(__file__).resolve().parent / "fonts"
 
-def get_font(size: int, bold: bool = False) -> ImageFont.ImageFont:
-    """Tries loading modern system fonts (Segoe UI / Arial) with fallback."""
-    font_candidates = []
-    if bold:
-        font_candidates = [
-            "C:\\Windows\\Fonts\\segoeuib.ttf",
-            "C:\\Windows\\Fonts\\arialbd.ttf",
-            "segoeuib.ttf",
-            "arialbd.ttf",
-        ]
-    else:
-        font_candidates = [
-            "C:\\Windows\\Fonts\\segoeui.ttf",
-            "C:\\Windows\\Fonts\\arial.ttf",
-            "segoeui.ttf",
-            "arial.ttf",
-        ]
-    
-    for candidate in font_candidates:
+def get_font(font_name: str, size: int) -> ImageFont.ImageFont:
+    """Loads Space Grotesk or Inter with system fallbacks."""
+    font_path = FONTS_DIR / font_name
+    if font_path.exists():
+        try:
+            return ImageFont.truetype(str(font_path), size)
+        except Exception:
+            pass
+
+    # Windows System Fallbacks
+    fallbacks = {
+        "SpaceGrotesk-Bold.ttf": ["C:\\Windows\\Fonts\\segoeuib.ttf", "C:\\Windows\\Fonts\\arialbd.ttf"],
+        "Inter-Regular.ttf": ["C:\\Windows\\Fonts\\segoeui.ttf", "C:\\Windows\\Fonts\\arial.ttf"],
+    }
+    for candidate in fallbacks.get(font_name, []):
         if os.path.exists(candidate):
             try:
                 return ImageFont.truetype(candidate, size)
             except Exception:
                 continue
-    
-    # Fallback to default
-    try:
-        return ImageFont.load_default()
-    except Exception:
-        return ImageFont.load_default()
+
+    return ImageFont.load_default()
 
 def wrap_text(text: str, font: ImageFont.ImageFont, max_width: int, draw: ImageDraw.ImageDraw) -> List[str]:
-    """Wraps text to fit within max_width in pixels."""
+    """Wraps text precisely according to pixel dimensions."""
     words = text.split()
     lines = []
     current_line = []
@@ -78,9 +50,8 @@ def wrap_text(text: str, font: ImageFont.ImageFont, max_width: int, draw: ImageD
     for word in words:
         test_line = " ".join(current_line + [word])
         bbox = draw.textbbox((0, 0), test_line, font=font)
-        line_width = bbox[2] - bbox[0]
-        
-        if line_width <= max_width:
+        line_w = bbox[2] - bbox[0]
+        if line_w <= max_width:
             current_line.append(word)
         else:
             if current_line:
@@ -89,182 +60,223 @@ def wrap_text(text: str, font: ImageFont.ImageFont, max_width: int, draw: ImageD
             else:
                 lines.append(word)
                 current_line = []
-
     if current_line:
         lines.append(" ".join(current_line))
     return lines
 
-def create_instagram_card(
+def round_corners(image: Image.Image, radius: int) -> Image.Image:
+    """Creates smooth rounded corners with anti-aliasing mask."""
+    mask = Image.new("L", image.size, 0)
+    draw = ImageDraw.Draw(mask)
+    draw.rounded_rectangle([(0, 0), image.size], radius=radius, fill=255)
+    result = image.copy()
+    result.putalpha(mask)
+    return result
+
+def create_arctic_instagram_card(
     title: str,
     category: str,
     bullets: List[str],
-    reading_time_min: int = 3,
+    photo_input: Optional[Union[str, Image.Image]] = None,
+    source_label: str = "PRIMARY SOURCE VERIFIED",
     output_path: Optional[str] = None
 ) -> Image.Image:
     """
-    Generates a 1080x1350 (4:5 portrait) Instagram card formatted with KEIGO branding.
+    Generates a 1080x1350 (4:5) Instagram card using the Arctic Intelligence palette:
+    - Snow White (#F8FAFC) background
+    - Deep Navy (#172554) main text & headings
+    - Arctic Blue (#2563EB) primary accent
+    - Ice Cyan (#BAE6FD) secondary accent
+    - Cool Gray (#64748B) secondary text
+    - Space Grotesk (Headings) & Inter (Body)
+    - Full photo embed support with rounded frame
     """
     width, height = 1080, 1350
-    img = Image.new("RGBA", (width, height), COLOR_BG)
-    draw = ImageDraw.Draw(img)
+    canvas = Image.new("RGB", (width, height), COLOR_SNOW_WHITE)
+    draw = ImageDraw.Draw(canvas)
 
-    theme = CATEGORY_THEMES.get(category.lower(), CATEGORY_THEMES["technology"])
-    accent_color = theme["accent"]
-    secondary_color = theme["secondary"]
-
-    # 1. Background subtle ambient glow (radial gradient at top-right)
-    glow_overlay = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-    glow_draw = ImageDraw.Draw(glow_overlay)
-    center_x, center_y = 900, 150
-    for r in range(400, 0, -8):
-        alpha = int(45 * (1 - r / 400))
-        glow_draw.ellipse(
-            (center_x - r, center_y - r, center_x + r, center_y + r),
-            fill=(secondary_color[0], secondary_color[1], secondary_color[2], alpha)
-        )
-    img = Image.alpha_composite(img, glow_overlay)
-    draw = ImageDraw.Draw(img)
-
-    # 2. Top Header (Brand + Category Pill)
-    margin_x = 72
-    header_y = 72
-
-    # Brand Title
-    font_brand = get_font(32, bold=True)
-    draw.text((margin_x, header_y), "K E I G O", fill=COLOR_CYAN, font=font_brand)
-
-    font_subbrand = get_font(18, bold=False)
-    draw.text((margin_x + 170, header_y + 10), "MEDIA", fill=COLOR_TEXT_MUTED, font=font_subbrand)
-
-    # Category Pill
-    category_label = theme["label"]
-    font_pill = get_font(20, bold=True)
-    pill_bbox = draw.textbbox((0, 0), category_label, font=font_pill)
-    pill_w = (pill_bbox[2] - pill_bbox[0]) + 36
-    pill_h = 44
-    pill_x = width - margin_x - pill_w
-    pill_y = header_y - 4
-
-    draw.rounded_rectangle(
-        (pill_x, pill_y, pill_x + pill_w, pill_y + pill_h),
-        radius=22,
-        fill=COLOR_CARD_BG,
-        outline=accent_color,
-        width=2
-    )
-    draw.text(
-        (pill_x + 18, pill_y + 11),
-        category_label,
-        fill=accent_color,
-        font=font_pill
-    )
-
-    # 3. Dynamic Headline
-    title_start_y = 170
+    margin_x = 64
     content_width = width - (margin_x * 2)
 
-    # Determine optimal font size based on title length
-    if len(title) < 70:
-        font_headline_size = 52
-    elif len(title) < 110:
-        font_headline_size = 44
-    else:
-        font_headline_size = 38
+    # Fonts
+    font_logo = get_font("SpaceGrotesk-Bold.ttf", 36)
+    font_tagline = get_font("Inter-Regular.ttf", 16)
+    font_pill = get_font("Inter-Regular.ttf", 18)
+    font_source = get_font("Inter-Regular.ttf", 14)
+    font_section = get_font("SpaceGrotesk-Bold.ttf", 16)
+    font_bullet = get_font("Inter-Regular.ttf", 20)
+    font_footer_brand = get_font("SpaceGrotesk-Bold.ttf", 20)
+    font_footer_text = get_font("Inter-Regular.ttf", 16)
 
-    font_headline = get_font(font_headline_size, bold=True)
-    wrapped_title = wrap_text(title, font_headline, content_width, draw)
+    # --------------------------------------------------------------------------
+    # 1. TOP BRAND HEADER
+    # --------------------------------------------------------------------------
+    header_y = 60
+
+    # Brand Logo (KEIGO)
+    draw.text((margin_x, header_y), "KEIGO", fill=COLOR_DEEP_NAVY, font=font_logo)
     
-    # Cap to max 4 lines
-    if len(wrapped_title) > 4:
-        wrapped_title = wrapped_title[:4]
-        wrapped_title[-1] = wrapped_title[-1].rstrip("., ") + "..."
+    # Dot accent in Arctic Blue
+    logo_bbox = draw.textbbox((margin_x, header_y), "KEIGO", font=font_logo)
+    draw.ellipse((logo_bbox[2] + 4, header_y + 18, logo_bbox[2] + 12, header_y + 26), fill=COLOR_ARCTIC_BLUE)
 
-    curr_y = title_start_y
-    line_spacing = int(font_headline_size * 1.25)
-    for line in wrapped_title:
-        draw.text((margin_x, curr_y), line, fill=COLOR_TEXT_WHITE, font=font_headline)
-        curr_y += line_spacing
+    draw.text((logo_bbox[2] + 20, header_y + 12), "GLOBAL MEDIA", fill=COLOR_COOL_GRAY, font=font_tagline)
 
-    # 4. Gradient Accent Divider Line
-    divider_y = curr_y + 24
-    line_length = content_width
-    for step in range(line_length):
-        ratio = step / line_length
-        r = int(accent_color[0] * (1 - ratio) + secondary_color[0] * ratio)
-        g = int(accent_color[1] * (1 - ratio) + secondary_color[1] * ratio)
-        b = int(accent_color[2] * (1 - ratio) + secondary_color[2] * ratio)
-        draw.line([(margin_x + step, divider_y), (margin_x + step, divider_y + 3)], fill=(r, g, b))
+    # Category Pill (Ice Cyan Background + Arctic Blue Text)
+    category_label = category.replace("_", " ").upper()
+    pill_text_bbox = draw.textbbox((0, 0), category_label, font=font_pill)
+    pill_w = (pill_text_bbox[2] - pill_text_bbox[0]) + 32
+    pill_h = 38
+    pill_x = width - margin_x - pill_w
+    pill_y = header_y + 2
 
-    # 5. Key Takeaways Section Header
-    takeaways_header_y = divider_y + 28
-    font_section_header = get_font(18, bold=True)
-    draw.text(
-        (margin_x, takeaways_header_y),
-        f"ESSENTIAL CONTEXT • {reading_time_min} MIN READ",
-        fill=accent_color,
-        font=font_section_header
+    # Draw rounded pill
+    draw.rounded_rectangle(
+        [(pill_x, pill_y), (pill_x + pill_w, pill_y + pill_h)],
+        radius=19,
+        fill=COLOR_ICE_CYAN,
+        outline=COLOR_ARCTIC_BLUE,
+        width=1
+    )
+    draw.text((pill_x + 16, pill_y + 8), category_label, fill=COLOR_ARCTIC_BLUE, font=font_pill)
+
+    # --------------------------------------------------------------------------
+    # 2. HERO PHOTO FRAME (Rounded Card)
+    # --------------------------------------------------------------------------
+    photo_y = 130
+    photo_h = 500
+    photo_w = content_width
+
+    photo_img = None
+    if photo_input:
+        if isinstance(photo_input, str) and os.path.exists(photo_input):
+            photo_img = Image.open(photo_input)
+        elif isinstance(photo_input, Image.Image):
+            photo_img = photo_input
+
+    if photo_img:
+        # Fit image to cover photo_w x photo_h maintaining aspect ratio
+        fitted_photo = ImageOps.fit(photo_img.convert("RGBA"), (photo_w, photo_h), method=Image.Resampling.LANCZOS)
+        rounded_photo = round_corners(fitted_photo, radius=20)
+        
+        # Paste rounded photo onto canvas
+        canvas.paste(rounded_photo, (margin_x, photo_y), rounded_photo)
+    else:
+        # Subtle default geometric tech backdrop if no photo provided
+        draw.rounded_rectangle(
+            [(margin_x, photo_y), (margin_x + photo_w, photo_y + photo_h)],
+            radius=20,
+            fill=COLOR_CARD_WHITE,
+            outline=COLOR_CARD_BORDER,
+            width=2
+        )
+        draw.text((margin_x + 40, photo_y + 220), "KEIGO VISUAL ARCHIVE", fill=COLOR_COOL_GRAY, font=font_logo)
+
+    # Photo border outline
+    draw.rounded_rectangle(
+        [(margin_x, photo_y), (margin_x + photo_w, photo_y + photo_h)],
+        radius=20,
+        outline=COLOR_CARD_BORDER,
+        width=1
     )
 
-    # 6. Three Bullet Cards
-    bullets_start_y = takeaways_header_y + 40
-    card_spacing = 20
-    available_height = (height - 130) - bullets_start_y
-    card_h = min(170, int((available_height - (card_spacing * 2)) / 3))
+    # Source Attribution Badge inside photo (Bottom-Right)
+    badge_text = source_label.upper()
+    badge_bbox = draw.textbbox((0, 0), badge_text, font=font_source)
+    badge_w = (badge_bbox[2] - badge_bbox[0]) + 24
+    badge_h = 28
+    badge_x = (margin_x + photo_w) - badge_w - 16
+    badge_y = (photo_y + photo_h) - badge_h - 16
 
-    display_bullets = (bullets[:3] if bullets else [
-        "Primary source verified report detailing technical breakthroughs.",
-        "Analysis of experimental methodology, verified evidence, and limitations.",
-        "Direct implications for future research and technological adoption."
-    ])
+    badge_overlay = Image.new("RGBA", (badge_w, badge_h), (23, 37, 84, 210)) # Deep Navy with alpha
+    badge_draw = ImageDraw.Draw(badge_overlay)
+    badge_draw.text((12, 6), badge_text, fill=COLOR_SNOW_WHITE, font=font_source)
+    canvas.paste(badge_overlay, (badge_x, badge_y), badge_overlay)
 
-    font_card_num = get_font(28, bold=True)
-    font_card_text = get_font(22, bold=False)
+    # --------------------------------------------------------------------------
+    # 3. DYNAMIC EDITORIAL HEADLINE
+    # --------------------------------------------------------------------------
+    title_start_y = photo_y + photo_h + 32
+
+    # Scale font size based on length
+    if len(title) < 75:
+        headline_size = 48
+    elif len(title) < 110:
+        headline_size = 40
+    else:
+        headline_size = 34
+
+    font_headline = get_font("SpaceGrotesk-Bold.ttf", headline_size)
+    wrapped_title = wrap_text(title, font_headline, content_width, draw)
+    if len(wrapped_title) > 3:
+        wrapped_title = wrapped_title[:3]
+        wrapped_title[-1] = wrapped_title[-1].rstrip("., ") + "..."
+
+    curr_title_y = title_start_y
+    line_h = int(headline_size * 1.25)
+    for line in wrapped_title:
+        draw.text((margin_x, curr_title_y), line, fill=COLOR_DEEP_NAVY, font=font_headline)
+        curr_title_y += line_h
+
+    # --------------------------------------------------------------------------
+    # 4. KEY CONTEXT / TAKEAWAYS CARD
+    # --------------------------------------------------------------------------
+    card_y = curr_title_y + 24
+    footer_reserve = 80
+    card_max_bottom = height - footer_reserve
+    card_h = card_max_bottom - card_y
+
+    # White Container with subtle border
+    draw.rounded_rectangle(
+        [(margin_x, card_y), (margin_x + content_width, card_y + card_h)],
+        radius=18,
+        fill=COLOR_CARD_WHITE,
+        outline=COLOR_CARD_BORDER,
+        width=1
+    )
+
+    # Left accent vertical border in Arctic Blue (#2563EB)
+    draw.rounded_rectangle(
+        [(margin_x, card_y), (margin_x + 8, card_y + card_h)],
+        radius=4,
+        fill=COLOR_ARCTIC_BLUE
+    )
+
+    # Section Label inside card
+    section_y = card_y + 20
+    draw.text((margin_x + 28, section_y), "KEY TAKEAWAYS • ANALYSIS", fill=COLOR_ARCTIC_BLUE, font=font_section)
+
+    # Bullets
+    bullets_y = section_y + 34
+    display_bullets = (bullets[:2] if card_h < 260 else bullets[:3])
 
     for i, bullet_text in enumerate(display_bullets):
-        card_top = bullets_start_y + (i * (card_h + card_spacing))
-        card_bottom = card_top + card_h
+        dot_cy = bullets_y + 11
+        draw.ellipse((margin_x + 28, dot_cy - 4, margin_x + 36, dot_cy + 4), fill=COLOR_ARCTIC_BLUE)
 
-        # Card Container
-        draw.rounded_rectangle(
-            (margin_x, card_top, width - margin_x, card_bottom),
-            radius=16,
-            fill=COLOR_CARD_BG,
-            outline=COLOR_CARD_BORDER,
-            width=1
-        )
+        wrapped_bullet = wrap_text(bullet_text, font_bullet, content_width - 70, draw)
+        b_text_y = bullets_y
+        for b_line in wrapped_bullet[:2]:
+            draw.text((margin_x + 48, b_text_y), b_line, fill=COLOR_DEEP_NAVY, font=font_bullet)
+            b_text_y += 28
+        bullets_y = b_text_y + 10
 
-        # Left Accent Number Pill
-        draw.text((margin_x + 24, card_top + 20), f"0{i+1}", fill=accent_color, font=font_card_num)
+    # --------------------------------------------------------------------------
+    # 5. BOTTOM BRAND FOOTER
+    # --------------------------------------------------------------------------
+    footer_y = height - 58
 
-        # Bullet Text Content
-        text_max_w = content_width - 100
-        wrapped_bullet = wrap_text(bullet_text, font_card_text, text_max_w, draw)
-        
-        b_y = card_top + 20
-        for b_line in wrapped_bullet[:3]:
-            draw.text((margin_x + 85, b_y), b_line, fill=COLOR_TEXT_WHITE, font=font_card_text)
-            b_y += 30
+    draw.text((margin_x, footer_y), "keigo.media", fill=COLOR_DEEP_NAVY, font=font_footer_brand)
+    draw.text((margin_x + 130, footer_y + 3), "•  Curiosity. Clarity. Discovery.", fill=COLOR_COOL_GRAY, font=font_footer_text)
 
-    # 7. Bottom Brand Footer
-    footer_y = height - 76
-    font_footer_brand = get_font(18, bold=True)
-    font_footer_tagline = get_font(18, bold=False)
+    # Right side indicator (Swipe Pill)
+    swipe_text = "SWIPE TO READ  ➔"
+    swipe_bbox = draw.textbbox((0, 0), swipe_text, font=font_footer_brand)
+    swipe_w = swipe_bbox[2] - swipe_bbox[0]
+    draw.text((width - margin_x - swipe_w, footer_y), swipe_text, fill=COLOR_ARCTIC_BLUE, font=font_footer_brand)
 
-    draw.text((margin_x, footer_y), "keigo.media", fill=COLOR_CYAN, font=font_footer_brand)
-    draw.text((margin_x + 130, footer_y), "•  Curiosity. Clarity. Discovery.", fill=COLOR_TEXT_MUTED, font=font_footer_tagline)
-
-    # Right side indicator
-    font_read_cta = get_font(16, bold=True)
-    cta_text = "READ FULL REPORT ↗"
-    cta_bbox = draw.textbbox((0, 0), cta_text, font=font_read_cta)
-    cta_w = cta_bbox[2] - cta_bbox[0]
-    draw.text((width - margin_x - cta_w, footer_y), cta_text, fill=COLOR_TEXT_WHITE, font=font_read_cta)
-
-    # Convert to RGB (for JPEG/PNG export)
-    final_img = img.convert("RGB")
-    
     if output_path:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
-        final_img.save(output_path, "PNG", quality=95)
+        canvas.save(output_path, "PNG", quality=95)
 
-    return final_img
+    return canvas

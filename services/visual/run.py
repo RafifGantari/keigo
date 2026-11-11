@@ -7,7 +7,7 @@ from pathlib import Path
 CURRENT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(CURRENT_DIR))
 
-from generator import create_instagram_card
+from generator import create_arctic_instagram_card
 from uploader import upload_card_to_storage
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -21,15 +21,17 @@ def run_test():
         "Peer-reviewed methodology published in Nature with open-source verification code available.",
         "Engineered to accelerate quantum materials simulation and molecular synthesis pipelines."
     ]
-    slug = "deepmind-neural-architecture-discovery"
+    slug = "arctic-deepmind-neural-discovery"
+    sample_photo = str(CURRENT_DIR / "sample_photo.jpg")
     output_local = str(CURRENT_DIR / "output" / f"{slug}.png")
 
-    logger.info("Generating 1080x1350 Instagram branded card...")
-    img = create_instagram_card(
+    logger.info("Generating Arctic Intelligence branded Instagram card with embedded photo...")
+    img = create_arctic_instagram_card(
         title=title,
         category=category,
         bullets=bullets,
-        reading_time_min=4,
+        photo_input=sample_photo,
+        source_label="NATURE RESEARCH • DEEPMIND",
         output_path=output_local
     )
     logger.info(f"Local card saved to: {output_local}")
@@ -39,15 +41,12 @@ def run_test():
     
     if public_url:
         logger.info("=" * 60)
-        logger.info("CARD GENERATION & UPLOAD SUCCESSFUL!")
+        logger.info("ARCTIC INTELLIGENCE CARD GENERATED & UPLOADED SUCCESSFULLY!")
         logger.info(f"Public CDN URL: {public_url}")
         logger.info("=" * 60)
+        print("\nPUBLIC_URL:", public_url)
     else:
-        logger.warning("Upload failed or Supabase Storage not accessible with current credentials.")
+        logger.warning("Upload failed or Supabase Storage not accessible.")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="KEIGO Instagram Visual Card Generator")
-    parser.add_argument("--test", action="store_true", default=True, help="Run sample generator & upload test")
-    args = parser.parse_args()
-
     run_test()
