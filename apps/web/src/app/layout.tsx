@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -51,11 +52,13 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#F8FAFC] text-[#172554] font-inter selection:bg-[#BAE6FD] selection:text-[#172554]">
-        <Navbar />
-        <main className="flex-1 w-full">
-          {children}
-        </main>
+      <body className="min-h-full flex flex-col bg-[#F8FAFC] dark:bg-[#121212] text-[#172554] dark:text-[#EDEDED] font-inter selection:bg-[#BAE6FD] selection:text-[#172554]">
+        <ThemeProvider>
+          <Navbar />
+          <main className="flex-1 w-full">
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );
