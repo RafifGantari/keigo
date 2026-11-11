@@ -1,33 +1,30 @@
 import os
-import io
-import textwrap
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Optional, Union, List
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 # ==============================================================================
-# KEIGO ARCTIC INTELLIGENCE PALETTE
+# KEIGO ARCTIC INTELLIGENCE PALETTE (HUMAN EDITORIAL DESIGN)
 # ==============================================================================
-COLOR_SNOW_WHITE   = (248, 250, 252) # #F8FAFC (Latar Belakang)
-COLOR_DEEP_NAVY    = (23, 37, 84)    # #172554 (Teks Utama & Heading)
-COLOR_ARCTIC_BLUE  = (37, 99, 235)   # #2563EB (Aksen Utama)
-COLOR_ICE_CYAN     = (186, 230, 253) # #BAE6FD (Aksen Sekunder / Pill)
-COLOR_COOL_GRAY    = (100, 116, 139) # #64748B (Teks Sekunder)
-COLOR_CARD_WHITE   = (255, 255, 255) # Pure White untuk Container
-COLOR_CARD_BORDER  = (226, 232, 240) # #E2E8F0 Garis Tepi Halus
+COLOR_SNOW_WHITE   = (248, 250, 252) # #F8FAFC (Base Canvas)
+COLOR_ICE_BG       = (240, 249, 255) # #F0F9FF (Light ice)
+COLOR_FACET_1      = (224, 242, 254) # #E0F2FE (Soft Blue facet)
+COLOR_FACET_2      = (186, 230, 253) # #BAE6FD (Ice Cyan facet)
+COLOR_DEEP_NAVY    = (23, 37, 84)    # #172554 (Deep Navy Text & Logo)
+COLOR_ROYAL_BLUE   = (30, 64, 175)   # #1E40AF (Primary Headline)
+COLOR_ARCTIC_BLUE  = (37, 99, 235)   # #2563EB (Kicker / Accent)
+COLOR_COOL_GRAY    = (100, 116, 139) # #64748B (Secondary / Meta Text)
+COLOR_MUTED_LINE   = (203, 213, 225) # #CBD5E1
 
 FONTS_DIR = Path(__file__).resolve().parent / "fonts"
 
 def get_font(font_name: str, size: int) -> ImageFont.ImageFont:
-    """Loads Space Grotesk or Inter with system fallbacks."""
     font_path = FONTS_DIR / font_name
     if font_path.exists():
         try:
             return ImageFont.truetype(str(font_path), size)
         except Exception:
             pass
-
-    # Windows System Fallbacks
     fallbacks = {
         "SpaceGrotesk-Bold.ttf": ["C:\\Windows\\Fonts\\segoeuib.ttf", "C:\\Windows\\Fonts\\arialbd.ttf"],
         "Inter-Regular.ttf": ["C:\\Windows\\Fonts\\segoeui.ttf", "C:\\Windows\\Fonts\\arial.ttf"],
@@ -38,11 +35,9 @@ def get_font(font_name: str, size: int) -> ImageFont.ImageFont:
                 return ImageFont.truetype(candidate, size)
             except Exception:
                 continue
-
     return ImageFont.load_default()
 
 def wrap_text(text: str, font: ImageFont.ImageFont, max_width: int, draw: ImageDraw.ImageDraw) -> List[str]:
-    """Wraps text precisely according to pixel dimensions."""
     words = text.split()
     lines = []
     current_line = []
@@ -65,7 +60,6 @@ def wrap_text(text: str, font: ImageFont.ImageFont, max_width: int, draw: ImageD
     return lines
 
 def round_corners(image: Image.Image, radius: int) -> Image.Image:
-    """Creates smooth rounded corners with anti-aliasing mask."""
     mask = Image.new("L", image.size, 0)
     draw = ImageDraw.Draw(mask)
     draw.rounded_rectangle([(0, 0), image.size], radius=radius, fill=255)
@@ -73,80 +67,69 @@ def round_corners(image: Image.Image, radius: int) -> Image.Image:
     result.putalpha(mask)
     return result
 
-def create_arctic_instagram_card(
+def create_editorial_card(
     title: str,
     category: str,
-    bullets: List[str],
+    subtitle: str,
+    date_str: str = "11 NOV 2026",
     photo_input: Optional[Union[str, Image.Image]] = None,
-    source_label: str = "PRIMARY SOURCE VERIFIED",
     output_path: Optional[str] = None
 ) -> Image.Image:
     """
-    Generates a 1080x1350 (4:5) Instagram card using the Arctic Intelligence palette:
-    - Snow White (#F8FAFC) background
-    - Deep Navy (#172554) main text & headings
-    - Arctic Blue (#2563EB) primary accent
-    - Ice Cyan (#BAE6FD) secondary accent
-    - Cool Gray (#64748B) secondary text
-    - Space Grotesk (Headings) & Inter (Body)
-    - Full photo embed support with rounded frame
+    Creates a human-designed editorial cover matching the ITS KSTI style:
+    - Snow White background with subtle geometric ice facets
+    - Top Left: Just 'KEIGO' (clean, bold, human)
+    - Top Right: Date / Edition stamp
+    - Category kicker as clean plain typography (NO AI rounded pill box)
+    - Commanding, massive headline in Arctic Blue / Deep Navy (Space Grotesk)
+    - Optional photo embedded cleanly with human editorial proportions
+    - Subtitle / context placed with generous whitespace (NO AI bullet card containers)
     """
     width, height = 1080, 1350
     canvas = Image.new("RGB", (width, height), COLOR_SNOW_WHITE)
     draw = ImageDraw.Draw(canvas)
 
-    margin_x = 64
-    content_width = width - (margin_x * 2)
+    # 1. Subtle Human Geometric Background Facets (matching reference ITS poster)
+    facet_overlay = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    facet_draw = ImageDraw.Draw(facet_overlay)
+
+    # Top-right geometric facets in ice cyan
+    facet_draw.polygon([(650, 0), (width, 0), (width, 420)], fill=(224, 242, 254, 180))
+    facet_draw.polygon([(780, 0), (width, 0), (width, 320)], fill=(186, 230, 253, 140))
+    
+    # Bottom-left subtle angular facet
+    facet_draw.polygon([(0, 1100), (450, height), (0, height)], fill=(240, 249, 255, 220))
+    facet_draw.polygon([(0, 1220), (280, height), (0, height)], fill=(224, 242, 254, 150))
+
+    canvas.paste(facet_overlay, (0, 0), facet_overlay)
+    draw = ImageDraw.Draw(canvas)
+
+    margin_x = 88
+    content_w = width - (margin_x * 2)
 
     # Fonts
-    font_logo = get_font("SpaceGrotesk-Bold.ttf", 36)
-    font_tagline = get_font("Inter-Regular.ttf", 16)
-    font_pill = get_font("Inter-Regular.ttf", 18)
-    font_source = get_font("Inter-Regular.ttf", 14)
-    font_section = get_font("SpaceGrotesk-Bold.ttf", 16)
-    font_bullet = get_font("Inter-Regular.ttf", 20)
-    font_footer_brand = get_font("SpaceGrotesk-Bold.ttf", 20)
-    font_footer_text = get_font("Inter-Regular.ttf", 16)
+    font_logo = get_font("SpaceGrotesk-Bold.ttf", 44)
+    font_meta = get_font("Inter-Regular.ttf", 20)
+    font_kicker = get_font("SpaceGrotesk-Bold.ttf", 26)
+    font_headline = get_font("SpaceGrotesk-Bold.ttf", 64)
+    font_subtitle = get_font("Inter-Regular.ttf", 26)
 
     # --------------------------------------------------------------------------
-    # 1. TOP BRAND HEADER
+    # 2. TOP HEADER (Simple, Clean, Human)
     # --------------------------------------------------------------------------
-    header_y = 60
+    header_y = 88
 
-    # Brand Logo (KEIGO)
+    # Logo: Just "KEIGO"
     draw.text((margin_x, header_y), "KEIGO", fill=COLOR_DEEP_NAVY, font=font_logo)
-    
-    # Dot accent in Arctic Blue
-    logo_bbox = draw.textbbox((margin_x, header_y), "KEIGO", font=font_logo)
-    draw.ellipse((logo_bbox[2] + 4, header_y + 18, logo_bbox[2] + 12, header_y + 26), fill=COLOR_ARCTIC_BLUE)
 
-    draw.text((logo_bbox[2] + 20, header_y + 12), "GLOBAL MEDIA", fill=COLOR_COOL_GRAY, font=font_tagline)
-
-    # Category Pill (Ice Cyan Background + Arctic Blue Text)
-    category_label = category.replace("_", " ").upper()
-    pill_text_bbox = draw.textbbox((0, 0), category_label, font=font_pill)
-    pill_w = (pill_text_bbox[2] - pill_text_bbox[0]) + 32
-    pill_h = 38
-    pill_x = width - margin_x - pill_w
-    pill_y = header_y + 2
-
-    # Draw rounded pill
-    draw.rounded_rectangle(
-        [(pill_x, pill_y), (pill_x + pill_w, pill_y + pill_h)],
-        radius=19,
-        fill=COLOR_ICE_CYAN,
-        outline=COLOR_ARCTIC_BLUE,
-        width=1
-    )
-    draw.text((pill_x + 16, pill_y + 8), category_label, fill=COLOR_ARCTIC_BLUE, font=font_pill)
+    # Top Right: Clean date / edition mark
+    date_bbox = draw.textbbox((0, 0), date_str, font=font_meta)
+    date_w = date_bbox[2] - date_bbox[0]
+    draw.text((width - margin_x - date_w, header_y + 12), date_str, fill=COLOR_COOL_GRAY, font=font_meta)
 
     # --------------------------------------------------------------------------
-    # 2. HERO PHOTO FRAME (Rounded Card)
+    # 3. PHOTO SECTION (If photo provided)
     # --------------------------------------------------------------------------
-    photo_y = 130
-    photo_h = 500
-    photo_w = content_width
-
     photo_img = None
     if photo_input:
         if isinstance(photo_input, str) and os.path.exists(photo_input):
@@ -155,125 +138,60 @@ def create_arctic_instagram_card(
             photo_img = photo_input
 
     if photo_img:
-        # Fit image to cover photo_w x photo_h maintaining aspect ratio
-        fitted_photo = ImageOps.fit(photo_img.convert("RGBA"), (photo_w, photo_h), method=Image.Resampling.LANCZOS)
-        rounded_photo = round_corners(fitted_photo, radius=20)
-        
-        # Paste rounded photo onto canvas
-        canvas.paste(rounded_photo, (margin_x, photo_y), rounded_photo)
+        photo_y = 190
+        photo_h = 440
+        photo_w = content_w
+
+        fitted = ImageOps.fit(photo_img.convert("RGBA"), (photo_w, photo_h), method=Image.Resampling.LANCZOS)
+        rounded = round_corners(fitted, radius=16)
+        canvas.paste(rounded, (margin_x, photo_y), rounded)
+
+        draw.rounded_rectangle([(margin_x, photo_y), (margin_x + photo_w, photo_y + photo_h)], radius=16, outline=COLOR_MUTED_LINE, width=1)
+        main_content_y = photo_y + photo_h + 50
     else:
-        # Subtle default geometric tech backdrop if no photo provided
-        draw.rounded_rectangle(
-            [(margin_x, photo_y), (margin_x + photo_w, photo_y + photo_h)],
-            radius=20,
-            fill=COLOR_CARD_WHITE,
-            outline=COLOR_CARD_BORDER,
-            width=2
-        )
-        draw.text((margin_x + 40, photo_y + 220), "KEIGO VISUAL ARCHIVE", fill=COLOR_COOL_GRAY, font=font_logo)
-
-    # Photo border outline
-    draw.rounded_rectangle(
-        [(margin_x, photo_y), (margin_x + photo_w, photo_y + photo_h)],
-        radius=20,
-        outline=COLOR_CARD_BORDER,
-        width=1
-    )
-
-    # Source Attribution Badge inside photo (Bottom-Right)
-    badge_text = source_label.upper()
-    badge_bbox = draw.textbbox((0, 0), badge_text, font=font_source)
-    badge_w = (badge_bbox[2] - badge_bbox[0]) + 24
-    badge_h = 28
-    badge_x = (margin_x + photo_w) - badge_w - 16
-    badge_y = (photo_y + photo_h) - badge_h - 16
-
-    badge_overlay = Image.new("RGBA", (badge_w, badge_h), (23, 37, 84, 210)) # Deep Navy with alpha
-    badge_draw = ImageDraw.Draw(badge_overlay)
-    badge_draw.text((12, 6), badge_text, fill=COLOR_SNOW_WHITE, font=font_source)
-    canvas.paste(badge_overlay, (badge_x, badge_y), badge_overlay)
+        main_content_y = 380
 
     # --------------------------------------------------------------------------
-    # 3. DYNAMIC EDITORIAL HEADLINE
+    # 4. CATEGORY KICKER (Clean Plain Typography, NOT an AI pill!)
     # --------------------------------------------------------------------------
-    title_start_y = photo_y + photo_h + 32
+    category_text = category.replace("_", " ").upper()
+    draw.text((margin_x, main_content_y), category_text, fill=COLOR_ARCTIC_BLUE, font=font_kicker)
 
-    # Scale font size based on length
-    if len(title) < 75:
-        headline_size = 48
-    elif len(title) < 110:
-        headline_size = 40
+    # --------------------------------------------------------------------------
+    # 5. COMMANDING HEADLINE (Space Grotesk Bold, Royal Blue #1E40AF)
+    # --------------------------------------------------------------------------
+    headline_y = main_content_y + 46
+    
+    if len(title) > 90:
+        font_headline = get_font("SpaceGrotesk-Bold.ttf", 52)
+        line_spacing = 64
     else:
-        headline_size = 34
+        font_headline = get_font("SpaceGrotesk-Bold.ttf", 60)
+        line_spacing = 74
 
-    font_headline = get_font("SpaceGrotesk-Bold.ttf", headline_size)
-    wrapped_title = wrap_text(title, font_headline, content_width, draw)
-    if len(wrapped_title) > 3:
-        wrapped_title = wrapped_title[:3]
-        wrapped_title[-1] = wrapped_title[-1].rstrip("., ") + "..."
-
-    curr_title_y = title_start_y
-    line_h = int(headline_size * 1.25)
-    for line in wrapped_title:
-        draw.text((margin_x, curr_title_y), line, fill=COLOR_DEEP_NAVY, font=font_headline)
-        curr_title_y += line_h
+    wrapped_title = wrap_text(title, font_headline, content_w, draw)
+    curr_y = headline_y
+    for line in wrapped_title[:4]:
+        draw.text((margin_x, curr_y), line, fill=COLOR_ROYAL_BLUE, font=font_headline)
+        curr_y += line_spacing
 
     # --------------------------------------------------------------------------
-    # 4. KEY CONTEXT / TAKEAWAYS CARD
+    # 6. SUBTITLE / EDITORIAL CONTEXT (Lower Section, Pure Editorial Text)
     # --------------------------------------------------------------------------
-    card_y = curr_title_y + 24
-    footer_reserve = 80
-    card_max_bottom = height - footer_reserve
-    card_h = card_max_bottom - card_y
-
-    # White Container with subtle border
-    draw.rounded_rectangle(
-        [(margin_x, card_y), (margin_x + content_width, card_y + card_h)],
-        radius=18,
-        fill=COLOR_CARD_WHITE,
-        outline=COLOR_CARD_BORDER,
-        width=1
-    )
-
-    # Left accent vertical border in Arctic Blue (#2563EB)
-    draw.rounded_rectangle(
-        [(margin_x, card_y), (margin_x + 8, card_y + card_h)],
-        radius=4,
-        fill=COLOR_ARCTIC_BLUE
-    )
-
-    # Section Label inside card
-    section_y = card_y + 20
-    draw.text((margin_x + 28, section_y), "KEY TAKEAWAYS • ANALYSIS", fill=COLOR_ARCTIC_BLUE, font=font_section)
-
-    # Bullets
-    bullets_y = section_y + 34
-    display_bullets = (bullets[:2] if card_h < 260 else bullets[:3])
-
-    for i, bullet_text in enumerate(display_bullets):
-        dot_cy = bullets_y + 11
-        draw.ellipse((margin_x + 28, dot_cy - 4, margin_x + 36, dot_cy + 4), fill=COLOR_ARCTIC_BLUE)
-
-        wrapped_bullet = wrap_text(bullet_text, font_bullet, content_width - 70, draw)
-        b_text_y = bullets_y
-        for b_line in wrapped_bullet[:2]:
-            draw.text((margin_x + 48, b_text_y), b_line, fill=COLOR_DEEP_NAVY, font=font_bullet)
-            b_text_y += 28
-        bullets_y = b_text_y + 10
+    desc_start_y = max(curr_y + 40, height - 260)
+    desc_w = int(content_w * 0.75)
+    
+    wrapped_sub = wrap_text(subtitle, font_subtitle, desc_w, draw)
+    sub_y = desc_start_y
+    for s_line in wrapped_sub[:3]:
+        draw.text((margin_x, sub_y), s_line, fill=COLOR_DEEP_NAVY, font=font_subtitle)
+        sub_y += 36
 
     # --------------------------------------------------------------------------
-    # 5. BOTTOM BRAND FOOTER
+    # 7. MINIMAL BOTTOM WATERMARK
     # --------------------------------------------------------------------------
-    footer_y = height - 58
-
-    draw.text((margin_x, footer_y), "keigo.media", fill=COLOR_DEEP_NAVY, font=font_footer_brand)
-    draw.text((margin_x + 130, footer_y + 3), "•  Curiosity. Clarity. Discovery.", fill=COLOR_COOL_GRAY, font=font_footer_text)
-
-    # Right side indicator (Swipe Pill)
-    swipe_text = "SWIPE TO READ  ➔"
-    swipe_bbox = draw.textbbox((0, 0), swipe_text, font=font_footer_brand)
-    swipe_w = swipe_bbox[2] - swipe_bbox[0]
-    draw.text((width - margin_x - swipe_w, footer_y), swipe_text, fill=COLOR_ARCTIC_BLUE, font=font_footer_brand)
+    footer_y = height - 70
+    draw.text((margin_x, footer_y), "keigo.media", fill=COLOR_COOL_GRAY, font=font_meta)
 
     if output_path:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
