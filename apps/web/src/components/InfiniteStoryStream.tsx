@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { Article } from '@/types';
 import { CinematicStoryFrame } from './CinematicStoryFrame';
 
@@ -10,80 +10,65 @@ interface InfiniteStoryStreamProps {
 
 export function InfiniteStoryStream({ articles }: InfiniteStoryStreamProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isScrollingRef = useRef(false);
+  const isResettingRef = useRef(false);
+
+  // Replicate array to create a continuous infinite loop (e.g. 5 sets)
+  const repeatCount = articles.length > 0 ? 5 : 1;
+  const loopedArticles = useMemo(() => {
+    if (articles.length === 0) return [];
+    let list: { article: Article; uniqueKey: string; originalIndex: number }[] = [];
+    for (let r = 0; r < repeatCount; r++) {
+      articles.forEach((art, idx) => {
+        list.push({
+          article: art,
+          uniqueKey: `${art.id}-rep-${r}-${idx}`,
+          originalIndex: idx,
+        });
+      });
+    }
+    return list;
+  }, [articles, repeatCount]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container || articles.length <= 1) return;
 
-    let touchStartY = 0;
+    // Start in the middle set (set index 2 out of 0..4)
+    const singleSetHeight = container.clientHeight * articles.length;
+    container.scrollTop = singleSetHeight * 2;
 
-    const handleWheel = (e: WheelEvent) => {
-      if (isScrollingRef.current) return;
+    const handleScroll = () => {
+      if (isResettingRef.current) return;
 
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 15;
-      const isAtTop = scrollTop <= 15;
+      const currentScroll = container.scrollTop;
+      const totalHeight = container.scrollHeight;
+      const clientHeight = container.clientHeight;
 
-      // User scrolls down at the very bottom -> Loop back to top
-      if (e.deltaY > 20 && isAtBottom) {
-        e.preventDefault();
-        isScrollingRef.current = true;
-        container.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => {
-          isScrollingRef.current = false;
-        }, 800);
+      // If user scrolls too close to bottom (reached 4th set), seamlessly jump back to 2nd set
+      if (currentScroll >= singleSetHeight * 3.5) {
+        isResettingRef.current = true;
+        container.style.scrollBehavior = 'auto';
+        container.scrollTop = currentScroll - singleSetHeight * 2;
+        container.style.scrollBehavior = 'smooth';
+        requestAnimationFrame(() => {
+          isResettingRef.current = false;
+        });
       }
-      // User scrolls up at the very top -> Loop to bottom
-      else if (e.deltaY < -20 && isAtTop) {
-        e.preventDefault();
-        isScrollingRef.current = true;
-        container.scrollTo({ top: scrollHeight, behavior: 'smooth' });
-        setTimeout(() => {
-          isScrollingRef.current = false;
-        }, 800);
-      }
-    };
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isScrollingRef.current) return;
-
-      const touchEndY = e.touches[0].clientY;
-      const deltaY = touchStartY - touchEndY;
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 20;
-      const isAtTop = scrollTop <= 20;
-
-      // Swiped up (scrolling down) at bottom
-      if (deltaY > 40 && isAtBottom) {
-        isScrollingRef.current = true;
-        container.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => {
-          isScrollingRef.current = false;
-        }, 800);
-      }
-      // Swiped down (scrolling up) at top
-      else if (deltaY < -40 && isAtTop) {
-        isScrollingRef.current = true;
-        container.scrollTo({ top: scrollHeight, behavior: 'smooth' });
-        setTimeout(() => {
-          isScrollingRef.current = false;
-        }, 800);
+      // If user scrolls too close to top (reached 1st set), seamlessly jump forward to 2nd set
+      else if (currentScroll <= singleSetHeight * 0.5) {
+        isResettingRef.current = true;
+        container.style.scrollBehavior = 'auto';
+        container.scrollTop = currentScroll + singleSetHeight * 2;
+        container.style.scrollBehavior = 'smooth';
+        requestAnimationFrame(() => {
+          isResettingRef.current = false;
+        });
       }
     };
 
-    container.addEventListener('wheel', handleWheel, { passive: false });
-    container.addEventListener('touchstart', handleTouchStart, { passive: true });
-    container.addEventListener('touchmove', handleTouchMove, { passive: true });
-
+    container.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      container.removeEventListener('wheel', handleWheel);
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('scroll', handleScroll);
     };
   }, [articles.length]);
 
@@ -92,8 +77,12 @@ export function InfiniteStoryStream({ articles }: InfiniteStoryStreamProps) {
       ref={containerRef}
       className="w-full h-screen h-dvh overflow-y-auto snap-y snap-mandatory scroll-smooth no-scrollbar bg-[#F8FAFC]"
     >
-      {articles.map((article, idx) => (
-        <CinematicStoryFrame key={article.id} article={article} index={idx} />
+      {loopedArticles.map((item) => (
+        <CinematicStoryFrame
+          key={item.uniqueKey}
+          article={item.article}
+          index={item.originalIndex}
+        />
       ))}
     </div>
   );

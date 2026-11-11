@@ -7,15 +7,8 @@ export function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === '/';
 
-  const categories = [
-    { name: 'AI', href: '/category/artificial-intelligence' },
-    { name: 'Tech', href: '/category/technology' },
-    { name: 'Science', href: '/category/science' },
-    { name: 'Innovation', href: '/category/innovation' },
-  ];
-
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none w-full px-5 sm:px-12 py-4 sm:py-7 flex items-center justify-between text-xs tracking-wider transition-colors duration-300">
+    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none w-full px-6 sm:px-12 py-6 sm:py-8 flex items-center justify-between text-xs tracking-wider transition-colors duration-300">
       {/* Brand Left: Pure Text */}
       <Link
         href="/"
@@ -26,36 +19,30 @@ export function Navbar() {
         KEIGO<span className={isHome ? 'text-[#38BDF8]' : 'text-[#2563EB]'}>.</span>
       </Link>
 
-      {/* Nav links Right: Pure Text, functional links */}
+      {/* Nav links Right: Only Articles and About */}
       <nav
-        className={`pointer-events-auto flex items-center gap-6 sm:gap-8 font-space-grotesk font-medium drop-shadow-sm ${
+        className={`pointer-events-auto flex items-center gap-6 sm:gap-8 font-space-grotesk font-semibold drop-shadow-sm text-xs sm:text-sm ${
           isHome ? 'text-white/90' : 'text-[#64748B]'
         }`}
       >
-        {categories.map((cat) => {
-          const isActive = pathname === cat.href;
-          return (
-            <Link
-              key={cat.href}
-              href={cat.href}
-              className={`transition-colors uppercase ${
-                isHome
-                  ? isActive
-                    ? 'text-[#BAE6FD] font-bold'
-                    : 'hover:text-white'
-                  : isActive
-                  ? 'text-[#2563EB] font-bold'
-                  : 'hover:text-[#172554]'
-              }`}
-            >
-              {cat.name}
-            </Link>
-          );
-        })}
+        <Link
+          href="/"
+          className={`transition-colors uppercase tracking-wider ${
+            isHome
+              ? 'text-[#BAE6FD] font-bold'
+              : 'hover:text-[#172554]'
+          }`}
+        >
+          ARTICLES
+        </Link>
         <Link
           href="/about"
-          className={`transition-colors uppercase ${
-            isHome ? 'hover:text-white' : 'hover:text-[#172554]'
+          className={`transition-colors uppercase tracking-wider ${
+            pathname === '/about'
+              ? 'text-[#2563EB] font-bold'
+              : isHome
+              ? 'hover:text-white'
+              : 'hover:text-[#172554]'
           }`}
         >
           ABOUT
