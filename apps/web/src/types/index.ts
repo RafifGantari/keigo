@@ -27,6 +27,9 @@ export interface Article {
   key_facts: string[];
   reading_time_minutes: number;
   cover_image_url: string | null;
+  image_url?: string | null;
+  image_caption?: string | null;
+  instagram_card_url?: string | null;
   social_caption: string | null;
   visual_bullets: string[];
   published_at: string | null;

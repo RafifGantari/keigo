@@ -14,18 +14,20 @@ export function ArticleCard({ article }: ArticleCardProps) {
       })
     : 'Recent';
 
+  const displayImage = article.image_url || article.cover_image_url;
+
   return (
     <article className="group bg-white rounded-xl border border-[#E2E8F0] overflow-hidden hover:border-[#2563EB]/40 hover:shadow-md transition-all duration-200 flex flex-col h-full">
-      {/* Cover Image / Visual Card */}
+      {/* Cover Image */}
       <Link
         href={`/article/${article.slug}`}
         className="block aspect-[16/10] bg-[#F8FAFC] overflow-hidden border-b border-[#E2E8F0] relative"
       >
-        {article.cover_image_url ? (
+        {displayImage ? (
           <img
-            src={article.cover_image_url}
+            src={displayImage}
             alt={article.title}
-            className="w-full h-full object-cover object-top group-hover:scale-[1.03] transition-transform duration-300"
+            className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-300"
             loading="lazy"
           />
         ) : (

@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Article } from '@/types';
 
 interface HeroArticleProps {
@@ -11,6 +10,8 @@ export function HeroArticle({ article }: HeroArticleProps) {
   const publishedDate = article.published_at 
     ? new Date(article.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     : 'Recently Published';
+
+  const displayImage = article.image_url || article.cover_image_url;
 
   return (
     <article className="relative bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
@@ -48,14 +49,14 @@ export function HeroArticle({ article }: HeroArticleProps) {
           </div>
         </div>
 
-        {/* Right Column: Visual Card Cover */}
-        <div className="lg:col-span-5 flex justify-center">
-          <Link href={`/article/${article.slug}`} className="block relative w-full aspect-[4/5] max-w-sm rounded-xl overflow-hidden border border-[#E2E8F0] bg-[#F8FAFC]">
-            {article.cover_image_url ? (
+        {/* Right Column: Real Editorial Photo (Landscape) */}
+        <div className="lg:col-span-5 flex justify-center w-full">
+          <Link href={`/article/${article.slug}`} className="block relative w-full aspect-[16/10] rounded-xl overflow-hidden border border-[#E2E8F0] bg-[#F8FAFC]">
+            {displayImage ? (
               <img
-                src={article.cover_image_url}
+                src={displayImage}
                 alt={article.title}
-                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
                 loading="eager"
               />
             ) : (

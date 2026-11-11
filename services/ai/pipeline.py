@@ -95,24 +95,32 @@ class ContentProductionPipeline:
         final_status = "published" if is_auto_publish else "pending_review"
         logger.info(f"Risk Level: {qc_result.get('risk_level')}. Review Status: {qc_result.get('review_status')}. Final Article Status: {final_status}")
 
-        # 4. Generate Arctic Intelligence Visual Card
+        # 4. Fetch Authentic News Photo & Generate Arctic Intelligence Visual Card
         slug = article_data.get("slug", "keigo-story-" + str(int(datetime.now().timestamp())))
         local_card_path = str(ROOT_DIR / "services" / "visual" / "output" / f"{slug}.png")
-        sample_photo = str(ROOT_DIR / "services" / "visual" / "sample_photo.jpg")
 
-        logger.info("Generating branded Arctic visual card...")
+        # Fetch authentic photo from source news article (NOT abstract purple gradient!)
+        from services.visual.media_fetcher import fetch_and_save_article_photo
+        logger.info(f"Fetching authentic news photo from {raw.get('original_url')}...")
+        news_image_url, news_photo_img = fetch_and_save_article_photo(
+            article_url=raw.get("original_url"),
+            category=category,
+            output_dir=str(ROOT_DIR / "services" / "visual" / "output")
+        )
+
+        logger.info("Generating branded Arctic visual card with authentic news photo...")
         card_img = create_editorial_card(
             title=article_data.get("title", raw["title"]).upper(),
             category=category,
             subtitle=article_data.get("visual_subtitle", article_data.get("excerpt", "")),
             date_str=datetime.now().strftime("%d %b %Y").upper(),
-            photo_input=sample_photo if Path(sample_photo).exists() else None,
+            photo_input=news_photo_img,
             output_path=local_card_path
         )
 
         # Upload Card to Supabase Storage CDN
         logger.info("Uploading visual card to Supabase Storage CDN...")
-        cover_image_url = upload_card_to_storage(card_img, slug=slug)
+        ig_card_url = upload_card_to_storage(card_img, slug=slug)
 
         # 5. Insert into Supabase 'articles' table
         article_record = {
@@ -126,7 +134,10 @@ class ContentProductionPipeline:
             "risk_level": qc_result.get("risk_level", "low"),
             "key_facts": article_data.get("key_facts", []),
             "reading_time_minutes": article_data.get("reading_time_minutes", 3),
-            "cover_image_url": cover_image_url,
+            "cover_image_url": ig_card_url,
+            "instagram_card_url": ig_card_url,
+            "image_url": news_image_url,
+            "image_caption": f"Primary visual reporting on {article_data.get('title', raw['title'])}.",
             "social_caption": article_data.get("social_caption", ""),
             "visual_bullets": article_data.get("key_facts", []),
             "published_at": datetime.now(timezone.utc).isoformat() if final_status == "published" else None

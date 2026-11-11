@@ -24,6 +24,8 @@ export async function generateMetadata({
     };
   }
 
+  const socialImage = article.image_url || article.cover_image_url;
+
   return {
     title: `${article.title} | KEIGO`,
     description: article.excerpt,
@@ -32,13 +34,13 @@ export async function generateMetadata({
       description: article.excerpt,
       type: 'article',
       publishedTime: article.published_at || undefined,
-      images: article.cover_image_url ? [{ url: article.cover_image_url }] : [],
+      images: socialImage ? [{ url: socialImage }] : [],
     },
     twitter: {
       card: 'summary_large_image',
       title: article.title,
       description: article.excerpt,
-      images: article.cover_image_url ? [article.cover_image_url] : [],
+      images: socialImage ? [socialImage] : [],
     },
   };
 }
@@ -65,8 +67,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     ? article.body_markdown.split('\n\n').filter((p: string) => p.trim().length > 0)
     : [article.excerpt];
 
+  const heroImage =
+    article.image_url ||
+    'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1600&auto=format&fit=crop';
+  const heroCaption =
+    article.image_caption ||
+    'Scientific instrumentation and experimental apparatus under active evaluation during primary investigation.';
+
   return (
-    <article className="max-w-4xl mx-auto py-4 sm:py-8 space-y-10">
+    <article className="max-w-4xl mx-auto py-2 sm:py-6 space-y-10">
       {/* Breadcrumb & Navigation */}
       <nav className="flex items-center gap-2 text-xs font-inter text-[#64748B]">
         <Link href="/" className="hover:text-[#2563EB] transition-colors">
@@ -84,7 +93,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       </nav>
 
       {/* Article Header */}
-      <header className="space-y-4 border-b border-[#E2E8F0] pb-8">
+      <header className="space-y-5 border-b border-[#E2E8F0] pb-8">
         <div className="flex items-center gap-3">
           <span className="font-space-grotesk text-xs font-bold tracking-wider uppercase text-[#2563EB]">
             {categoryLabel}
@@ -124,22 +133,27 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </div>
       </header>
 
-      {/* Visual Presentation / Cover Graphic */}
-      {article.cover_image_url && (
-        <div className="flex justify-center my-8">
-          <div className="w-full max-w-md aspect-[4/5] rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-sm bg-white">
-            <img
-              src={article.cover_image_url}
-              alt={article.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
+      {/* Real News Photo (Landscape Editorial Banner) + Photo Caption Below */}
+      <figure className="space-y-3 my-8">
+        <div className="w-full aspect-[16/9] sm:aspect-[21/9] rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-sm bg-[#F1F5F9] relative group">
+          <img
+            src={heroImage}
+            alt={article.title}
+            className="w-full h-full object-cover group-hover:scale-[1.01] transition-transform duration-500"
+          />
         </div>
-      )}
+        {/* Penjelasan Foto di Bawahnya */}
+        <figcaption className="text-xs text-[#64748B] font-inter leading-relaxed flex items-start gap-2 px-1">
+          <span className="font-semibold text-[#172554] shrink-0 font-space-grotesk uppercase tracking-wider text-[11px]">
+            Context:
+          </span>
+          <span>{heroCaption}</span>
+        </figcaption>
+      </figure>
 
       {/* Key Facts / Core Takeaways */}
       {article.key_facts && article.key_facts.length > 0 && (
-        <section className="bg-white rounded-xl border border-[#E2E8F0] p-6 space-y-3">
+        <section className="bg-white rounded-xl border border-[#E2E8F0] p-6 space-y-3 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.03)]">
           <h4 className="font-space-grotesk font-bold text-sm tracking-wider uppercase text-[#172554]">
             Core Technical Takeaways
           </h4>
@@ -154,7 +168,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       )}
 
       {/* Main Body Content */}
-      <div className="space-y-6 text-[#172554] font-inter text-base sm:text-lg leading-relaxed">
+      <div className="space-y-6 text-[#172554] font-inter text-base sm:text-lg leading-relaxed pt-2">
         {paragraphs.map((p: string, idx: number) => {
           if (p.startsWith('# ')) {
             return (
