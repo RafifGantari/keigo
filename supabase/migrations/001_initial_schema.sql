@@ -283,7 +283,11 @@ BEGIN
 END $$;
 
 -- Public (anon & authenticated) policies:
--- Only published articles and their sources can be viewed by the public web visitor
+-- Only active sources, published articles, and their sources can be viewed by public/anon
+CREATE POLICY "public_read_active_sources" ON sources
+    FOR SELECT TO anon, authenticated
+    USING (active = true);
+
 DROP POLICY IF EXISTS "public_read_published_articles" ON articles;
 CREATE POLICY "public_read_published_articles" ON articles
     FOR SELECT TO anon, authenticated
