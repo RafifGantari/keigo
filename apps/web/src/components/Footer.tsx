@@ -31,11 +31,6 @@ export function Footer() {
                 Autonomous science, artificial intelligence & deep technology intelligence. Tracing breakthroughs directly to primary laboratory papers and engineering whitepapers.
               </p>
             </div>
-
-            <div className="flex items-center gap-2 text-xs font-inter text-[#BAE6FD]">
-              <span className="font-mono text-[#2563EB] font-bold">//</span>
-              <span>Research Pipeline Active</span>
-            </div>
           </div>
 
           {/* Right Columns: Minimalist Navigation Grid */}

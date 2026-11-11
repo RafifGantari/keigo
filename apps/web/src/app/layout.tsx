@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "@/components/Navbar";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -51,6 +52,7 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#F8FAFC] text-[#172554] font-inter selection:bg-[#BAE6FD] selection:text-[#172554]">
+        <Navbar />
         <main className="flex-1 w-full">
           {children}
         </main>

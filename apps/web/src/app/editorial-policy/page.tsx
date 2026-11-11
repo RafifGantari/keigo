@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Editorial Standards — KEIGO',
@@ -74,6 +75,8 @@ export default function EditorialPolicyPage() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

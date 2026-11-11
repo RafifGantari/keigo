@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getArticleBySlug, getAllPublishedSlugs } from '@/lib/supabase';
 import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -218,14 +219,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </section>
         )}
 
-        {/* Minimal Footer */}
-        <footer className="pt-8 border-t border-[#E2E8F0] flex items-center justify-between text-xs text-[#64748B] font-space-grotesk">
+        {/* Minimal Footer Nav */}
+        <div className="pt-8 border-t border-[#E2E8F0] flex items-center justify-between text-xs text-[#64748B] font-space-grotesk">
           <Link href="/" className="hover:text-[#172554] uppercase font-bold text-[#2563EB]">
             ← Back to Stories
           </Link>
           <span>KEIGO.</span>
-        </footer>
+        </div>
       </article>
+
+      <Footer />
     </div>
   );
 }

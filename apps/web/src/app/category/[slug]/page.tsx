@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getArticlesByCategory } from '@/lib/supabase';
 import { CinematicStoryFrame } from '@/components/CinematicStoryFrame';
 import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
 import { ContentCategory } from '@/types';
 
 interface CategoryPageProps {
@@ -103,6 +104,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </Link>
         </div>
       )}
+
+      <Footer />
     </div>
   );
 }

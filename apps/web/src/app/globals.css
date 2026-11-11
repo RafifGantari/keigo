@@ -35,6 +35,15 @@
   transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Light mode custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 export function Navbar() {
   const pathname = usePathname();
+  const isHome = pathname === '/';
 
   const categories = [
     { name: 'AI', href: '/category/artificial-intelligence' },
@@ -14,22 +15,37 @@ export function Navbar() {
   ];
 
   return (
-    <header className="w-full px-6 sm:px-12 py-6 flex items-center justify-between text-xs tracking-wider z-40">
-      {/* Brand: Pure text */}
-      <Link href="/" className="font-space-grotesk font-bold text-2xl tracking-tight text-[#172554] hover:text-[#2563EB] transition-colors">
-        KEIGO<span className="text-[#2563EB]">.</span>
+    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none w-full px-6 sm:px-12 py-5 sm:py-7 flex items-center justify-between text-xs tracking-wider transition-colors duration-300">
+      {/* Brand Left: Pure Text */}
+      <Link
+        href="/"
+        className={`pointer-events-auto font-space-grotesk font-bold text-2xl sm:text-3xl tracking-tight transition-colors drop-shadow-sm ${
+          isHome ? 'text-white hover:text-[#BAE6FD]' : 'text-[#172554] hover:text-[#2563EB]'
+        }`}
+      >
+        KEIGO<span className={isHome ? 'text-[#38BDF8]' : 'text-[#2563EB]'}>.</span>
       </Link>
 
-      {/* Nav links: Pure text */}
-      <nav className="flex items-center gap-6 sm:gap-8 font-space-grotesk font-semibold text-[#64748B]">
+      {/* Nav links Right: Pure Text, functional links */}
+      <nav
+        className={`pointer-events-auto flex items-center gap-6 sm:gap-8 font-space-grotesk font-medium drop-shadow-sm ${
+          isHome ? 'text-white/90' : 'text-[#64748B]'
+        }`}
+      >
         {categories.map((cat) => {
           const isActive = pathname === cat.href;
           return (
             <Link
               key={cat.href}
               href={cat.href}
-              className={`hover:text-[#172554] transition-colors uppercase ${
-                isActive ? 'text-[#2563EB] font-bold' : ''
+              className={`transition-colors uppercase ${
+                isHome
+                  ? isActive
+                    ? 'text-[#BAE6FD] font-bold'
+                    : 'hover:text-white'
+                  : isActive
+                  ? 'text-[#2563EB] font-bold'
+                  : 'hover:text-[#172554]'
               }`}
             >
               {cat.name}
@@ -38,7 +54,9 @@ export function Navbar() {
         })}
         <Link
           href="/about"
-          className="hover:text-[#172554] transition-colors uppercase text-[#64748B]"
+          className={`transition-colors uppercase ${
+            isHome ? 'hover:text-white' : 'hover:text-[#172554]'
+          }`}
         >
           ABOUT
         </Link>

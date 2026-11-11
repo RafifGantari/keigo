@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'About KEIGO — Curiosity. Clarity. Discovery.',
@@ -94,6 +95,8 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }
