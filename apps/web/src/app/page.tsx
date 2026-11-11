@@ -16,77 +16,90 @@ export default async function HomePage() {
       getArticlesByCategory('innovation', 3),
     ]);
 
-  return (
-    <div className="space-y-16">
-      {/* Editorial Mission Header */}
-      <section className="pt-4 pb-2 border-b border-[#E2E8F0]">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EFF6FF] border border-[#BAE6FD] text-[#2563EB] text-xs font-space-grotesk font-semibold tracking-wider uppercase mb-4">
-            <span className="w-2 h-2 rounded-full bg-[#2563EB] animate-pulse"></span>
-            Independent Science & Tech Journalism
-          </div>
-          <h1 className="font-space-grotesk font-bold text-4xl sm:text-5xl lg:text-6xl text-[#172554] tracking-tight leading-[1.1]">
-            Curiosity. Clarity. Discovery.
-          </h1>
-          <p className="font-inter text-lg sm:text-xl text-[#64748B] mt-4 leading-relaxed">
-            Investigating foundational developments in frontier intelligence, scientific breakthroughs, and technical architectures shaping humanity.
-          </p>
-        </div>
-      </section>
+  const allArticles = featured ? [featured, ...latestArticles] : latestArticles;
 
-      {/* Featured / Hero Article */}
+  return (
+    <div className="space-y-16 sm:space-y-24">
+      {/* 1. Cinematic Hero Section */}
       {featured ? (
         <section>
-          <div className="flex items-center justify-between mb-4">
-            <span className="font-space-grotesk text-xs font-bold uppercase tracking-wider text-[#2563EB]">
-              FEATURED INVESTIGATION
-            </span>
-          </div>
           <HeroArticle article={featured} />
         </section>
       ) : (
-        /* Graceful placeholder when pipeline is running */
-        <section className="bg-white rounded-2xl border border-[#E2E8F0] p-8 sm:p-12 text-center max-w-2xl mx-auto shadow-sm">
-          <div className="w-12 h-12 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center mx-auto mb-4 font-space-grotesk font-bold text-xl">
-            K
+        <section className="px-6 sm:px-12 py-16 text-center max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.02] text-xs font-mono text-[#38BDF8] tracking-widest uppercase mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-pulse"></span>
+            INGESTION ENGINE ACTIVE
           </div>
-          <h2 className="font-space-grotesk font-bold text-2xl text-[#172554] mb-2">
-            Research & Ingestion Engine Active
-          </h2>
-          <p className="font-inter text-sm text-[#64748B] leading-relaxed mb-6">
-            The KEIGO editorial pipeline has indexed 220+ global research feeds. Verified technical investigations will appear here once cleared through the Fact-Checking Risk Gate.
+          <h1 className="font-space-grotesk font-bold text-4xl sm:text-6xl text-white tracking-tight uppercase leading-[1.05]">
+            Curiosity. Clarity. Discovery.
+          </h1>
+          <p className="font-inter text-[#A8A8A8] text-base sm:text-lg mt-4 max-w-xl mx-auto leading-relaxed">
+            Investigating foundational developments in frontier intelligence, scientific breakthroughs, and technical architectures.
           </p>
-          <div className="inline-flex items-center gap-2 text-xs font-space-grotesk font-semibold text-[#2563EB] bg-[#F8FAFC] px-4 py-2 rounded-full border border-[#E2E8F0]">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-            Supabase PostgreSQL • Gemini 3.8 Flash • Visual Generator
-          </div>
         </section>
       )}
 
-      {/* Latest Stories Grid */}
-      {latestArticles.length > 0 && (
-        <section className="space-y-6">
-          <div className="flex items-end justify-between border-b border-[#E2E8F0] pb-4">
+      {/* 2. Signature MilleDollars-style Tabular Investigation Index */}
+      {allArticles.length > 0 && (
+        <section className="w-full px-6 sm:px-10 lg:px-14">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between pb-6 border-b border-white/[0.12] gap-4">
             <div>
-              <span className="font-space-grotesk text-xs font-bold uppercase tracking-wider text-[#2563EB]">
-                RECENT DISPATCHES
+              <span className="font-mono text-xs text-[#38BDF8] tracking-widest uppercase">
+                [ INDEX 01 — {String(allArticles.length).padStart(2, '0')} ]
               </span>
-              <h2 className="font-space-grotesk font-bold text-2xl sm:text-3xl text-[#172554] mt-1">
-                Latest Investigations
+              <h2 className="font-space-grotesk font-bold text-2xl sm:text-4xl text-white tracking-tight uppercase mt-1">
+                Active Investigations
               </h2>
             </div>
+            <span className="font-mono text-xs text-[#737373] uppercase tracking-wider">
+              Autonomous Verification Log
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {latestArticles.map((article) => (
-              <ArticleCard key={article.id} article={article} />
-            ))}
+          {/* Interactive Row Table */}
+          <div className="divide-y divide-white/[0.08] group/table">
+            {allArticles.map((article, idx) => {
+              const year = article.published_at 
+                ? new Date(article.published_at).getFullYear() 
+                : '2026';
+              const categoryLabel = article.category.replace('_', ' ').toUpperCase();
+
+              return (
+                <Link
+                  key={article.id}
+                  href={`/article/${article.slug}`}
+                  className="group relative flex flex-col md:flex-row md:items-center justify-between py-6 sm:py-8 transition-all duration-300 hover:pl-2 group-hover/table:opacity-40 hover:!opacity-100"
+                >
+                  {/* Left: Index & Title */}
+                  <div className="flex items-start md:items-center gap-4 sm:gap-8 flex-1 pr-6">
+                    <span className="font-mono text-xs sm:text-sm text-[#737373] group-hover:text-[#38BDF8] transition-colors tabular-nums">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <h3 className="font-space-grotesk font-bold text-lg sm:text-2xl text-white group-hover:text-[#38BDF8] transition-colors uppercase tracking-tight">
+                      {article.title}
+                    </h3>
+                  </div>
+
+                  {/* Right: Meta & Arrow */}
+                  <div className="flex items-center justify-between md:justify-end gap-6 sm:gap-10 mt-3 md:mt-0 shrink-0 font-mono text-xs text-[#A8A8A8]">
+                    <span className="uppercase text-[11px] px-2.5 py-0.5 rounded-full border border-white/10 bg-white/[0.02]">
+                      {categoryLabel}
+                    </span>
+                    <span className="text-[#737373] hidden sm:inline">{year}</span>
+                    <span className="text-white group-hover:translate-x-2 transition-transform duration-300 text-sm font-bold">
+                      ➔
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}
 
-      {/* Categorized Pillars */}
-      <div className="space-y-12">
+      {/* 3. Categorized Pillar Grids */}
+      <div className="w-full px-6 sm:px-10 lg:px-14 space-y-8">
         <CategorySection
           category="artificial_intelligence"
           title="Artificial Intelligence"

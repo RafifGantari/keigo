@@ -14,7 +14,7 @@ const spaceGrotesk = Space_Grotesk({
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600"],
   display: "swap",
 });
 
@@ -24,20 +24,18 @@ export const metadata: Metadata = {
     default: "KEIGO — Curiosity. Clarity. Discovery.",
   },
   description:
-    "Independent global media discovering, researching, and explaining key breakthroughs in Artificial Intelligence, Technology, Science, and Innovation.",
+    "Independent science, frontier AI, and deep technology intelligence publication.",
   keywords: [
     "Artificial Intelligence",
-    "Technology",
+    "Quantum Computing",
+    "Autonomous Agents",
     "Science",
-    "Innovation",
-    "Research",
-    "Engineering",
+    "Deep Technology",
   ],
-  authors: [{ name: "KEIGO Editorial Team" }],
+  authors: [{ name: "KEIGO Editorial" }],
   openGraph: {
     title: "KEIGO — Curiosity. Clarity. Discovery.",
-    description:
-      "Deep technical journalism and verified breakthroughs in AI, Tech, Science, and Innovation.",
+    description: "Deep technical journalism and verified breakthroughs in AI, Tech, Science, and Innovation.",
     siteName: "KEIGO",
     locale: "en_US",
     type: "website",
@@ -54,9 +52,9 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#F8FAFC] text-[#172554] font-inter">
+      <body className="min-h-full flex flex-col bg-[#161616] text-[#EDEDED] font-inter selection:bg-[#38bdf8] selection:text-[#000000]">
         <Navbar />
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 sm:pt-32 sm:pb-16">
+        <main className="flex-1 w-full pt-20 sm:pt-24 pb-16">
           {children}
         </main>
         <Footer />

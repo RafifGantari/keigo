@@ -10,11 +10,7 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 25);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -22,68 +18,69 @@ export function Navbar() {
 
   const categories = [
     { name: 'AI', href: '/category/artificial-intelligence' },
-    { name: 'Technology', href: '/category/technology' },
-    { name: 'Science', href: '/category/science' },
-    { name: 'Innovation', href: '/category/innovation' },
+    { name: 'TECH', href: '/category/technology' },
+    { name: 'SCIENCE', href: '/category/science' },
+    { name: 'INNOVATION', href: '/category/innovation' },
   ];
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-[#F8FAFC]/80 backdrop-blur-lg border-b border-[#E2E8F0]/60 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] py-3'
-          : 'bg-transparent border-b border-transparent py-5'
+          ? 'bg-[#161616]/80 backdrop-blur-xl border-b border-white/[0.08] py-4'
+          : 'bg-transparent border-b border-transparent py-6'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Brand Logo */}
+      <div className="w-full px-6 sm:px-10 lg:px-14 flex items-center justify-between">
+        
+        {/* Brand Left: Milledollars Split/Bold Style */}
         <Link href="/" className="flex items-center gap-1 group">
-          <span className="font-space-grotesk font-bold text-2xl sm:text-3xl tracking-tight text-[#172554] group-hover:text-[#2563EB] transition-colors">
-            KEIGO<span className="text-[#2563EB]">.</span>
+          <span className="font-space-grotesk font-bold text-2xl sm:text-3xl tracking-tighter text-white group-hover:text-[#60A5FA] transition-colors">
+            KEIGO<span className="text-[#38BDF8]">.</span>
           </span>
         </Link>
 
-        {/* Center Categories (Minimalist Editorial Style) */}
-        <nav className="hidden md:flex items-center gap-7 font-inter text-sm font-medium text-[#172554]">
-          {categories.map((cat) => {
-            const isActive = pathname === cat.href;
-            return (
-              <Link
-                key={cat.href}
-                href={cat.href}
-                className={`transition-colors py-1 relative hover:text-[#2563EB] ${
-                  isActive ? 'text-[#2563EB] font-semibold' : 'text-[#334155]'
-                }`}
-              >
-                {cat.name}
-              </Link>
-            );
-          })}
-        </nav>
+        {/* Center Pill Badge (Signature MilleDollars Element) */}
+        <div className="hidden lg:flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/[0.12] bg-white/[0.02] backdrop-blur-md text-[11px] font-space-grotesk text-[#A8A8A8] tracking-wider uppercase">
+          <span className="text-[#38BDF8] animate-pulse">✺</span>
+          <span>Autonomous Frontier Science & AI Intelligence</span>
+        </div>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-5 text-sm font-inter">
-          <Link
-            href="/about"
-            className="hidden sm:inline-block text-[#64748B] hover:text-[#172554] transition-colors font-medium text-xs tracking-wide"
-          >
-            About
-          </Link>
-          <Link
-            href="/editorial-policy"
-            className="hidden lg:inline-block text-[#64748B] hover:text-[#172554] transition-colors font-medium text-xs tracking-wide"
-          >
-            Standards
-          </Link>
+        {/* Right Navigation Links */}
+        <div className="flex items-center gap-6 sm:gap-8 font-space-grotesk text-xs tracking-wider">
+          <nav className="hidden md:flex items-center gap-6 text-[#A8A8A8]">
+            {categories.map((cat) => {
+              const isActive = pathname === cat.href;
+              return (
+                <Link
+                  key={cat.href}
+                  href={cat.href}
+                  className={`hover:text-white transition-colors uppercase ${
+                    isActive ? 'text-white font-semibold' : ''
+                  }`}
+                >
+                  {cat.name}
+                </Link>
+              );
+            })}
+            <Link
+              href="/about"
+              className="hover:text-white transition-colors uppercase text-[#737373]"
+            >
+              ABOUT
+            </Link>
+          </nav>
+
           <a
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#172554] text-[#F8FAFC] hover:bg-[#2563EB] px-4 py-2 rounded-full text-xs font-semibold tracking-wider transition-all shadow-sm hover:shadow"
+            className="px-4 py-1.5 rounded-full border border-white/[0.2] bg-white text-[#161616] hover:bg-[#38BDF8] hover:border-[#38BDF8] hover:text-[#000000] text-xs font-bold tracking-wider transition-all duration-300"
           >
-            FOLLOW IG
+            DISPATCH ↗
           </a>
         </div>
+
       </div>
     </header>
   );

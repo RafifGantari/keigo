@@ -7,17 +7,18 @@
   }
 
   body {
-    background-color: #F8FAFC;
-    color: #172554;
+    background-color: #161616;
+    color: #EDEDED;
     font-family: var(--font-inter);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-space-grotesk);
-    letter-spacing: -0.02em;
-    color: #172554;
+    letter-spacing: -0.025em;
+    color: #FFFFFF;
   }
 }
 
@@ -29,18 +30,36 @@
   font-family: var(--font-inter);
 }
 
-/* Custom scrollbar */
+/* Hairline borders and subtle glow */
+.hairline-border {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.hairline-border-b {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.hairline-border-t {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Smooth transitions */
+* {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dark mode custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #161616;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 4px;
+  background: #333333;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #555555;
 }

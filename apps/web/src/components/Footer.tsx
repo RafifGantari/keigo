@@ -1,90 +1,133 @@
 import Link from 'next/link';
 
 export function Footer() {
+  const pillars = [
+    { name: 'Artificial Intelligence', href: '/category/artificial-intelligence' },
+    { name: 'Engineering & Tech', href: '/category/technology' },
+    { name: 'Scientific Research', href: '/category/science' },
+    { name: 'Future Innovation', href: '/category/innovation' },
+  ];
+
+  const standards = [
+    { name: 'About KEIGO', href: '/about' },
+    { name: 'Editorial Verification', href: '/editorial-policy' },
+    { name: 'Risk Gate Architecture', href: '/editorial-policy#risk-gate' },
+  ];
+
   return (
-    <footer className="bg-[#172554] text-[#F8FAFC] border-t border-[#1E40AF]/30 pt-16 pb-12 mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 pb-12 border-b border-[#334155]/60">
-          {/* Brand Info */}
-          <div className="md:col-span-2 space-y-4">
-            <span className="font-space-grotesk font-bold text-3xl tracking-tight text-[#F8FAFC]">
-              KEIGO<span className="text-[#2563EB]">.</span>
-            </span>
-            <p className="font-inter text-sm text-[#94A3B8] max-w-md leading-relaxed">
-              An independent global media platform discovering, researching, and explaining the critical developments in Artificial Intelligence, Technology, Science, and Innovation.
-            </p>
-            <div className="pt-2 flex items-center gap-3 text-xs font-inter text-[#BAE6FD]">
-              <span className="inline-block w-2 h-2 rounded-full bg-[#2563EB] animate-pulse"></span>
-              Autonomous Research Pipeline Active
+    <footer className="w-full border-t border-white/[0.08] bg-[#121212] text-white pt-16 sm:pt-24 pb-12 mt-20">
+      <div className="w-full px-6 sm:px-10 lg:px-14">
+        
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-white/[0.08]">
+          
+          {/* Left: MilleDollars-style Split Brandmark Lockup */}
+          <div className="lg:col-span-6 flex flex-col justify-between space-y-8">
+            <div>
+              <span className="font-space-grotesk font-bold text-4xl sm:text-6xl tracking-tighter text-white block">
+                KEIGO<span className="text-[#38BDF8]">.</span>
+              </span>
+              <p className="font-mono text-xs text-[#A8A8A8] uppercase tracking-widest mt-4 max-w-md leading-relaxed">
+                Autonomous science, artificial intelligence & deep technology intelligence. Based on primary documentation, verified preprints, and reproducible breakthroughs.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 text-xs font-mono text-[#38BDF8]">
+              <span className="w-2 h-2 rounded-full bg-[#38BDF8] animate-pulse"></span>
+              <span>AUTONOMOUS INGESTION ENGINE ACTIVE</span>
             </div>
           </div>
 
-          {/* Pillars */}
-          <div>
-            <h4 className="font-space-grotesk font-semibold text-sm tracking-wider uppercase text-[#BAE6FD] mb-4">
-              Pillars
-            </h4>
-            <ul className="space-y-2.5 font-inter text-sm text-[#94A3B8]">
-              <li>
-                <Link href="/category/artificial-intelligence" className="hover:text-[#F8FAFC] transition-colors">
-                  Artificial Intelligence
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/technology" className="hover:text-[#F8FAFC] transition-colors">
-                  Technology
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/science" className="hover:text-[#F8FAFC] transition-colors">
-                  Science & Research
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/innovation" className="hover:text-[#F8FAFC] transition-colors">
-                  Future Innovation
-                </Link>
-              </li>
-            </ul>
+          {/* Right Columns: Minimalist Navigation Grid */}
+          <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-8 text-xs font-space-grotesk">
+            
+            {/* Pillars */}
+            <div className="space-y-4">
+              <span className="font-mono text-[#737373] tracking-widest uppercase text-[11px] block">
+                [ PILLARS ]
+              </span>
+              <ul className="space-y-2.5">
+                {pillars.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="text-[#A8A8A8] hover:text-white transition-colors uppercase tracking-wider"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Verification */}
+            <div className="space-y-4">
+              <span className="font-mono text-[#737373] tracking-widest uppercase text-[11px] block">
+                [ PROTOCOLS ]
+              </span>
+              <ul className="space-y-2.5">
+                {standards.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="text-[#A8A8A8] hover:text-white transition-colors uppercase tracking-wider"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Channels */}
+            <div className="space-y-4 col-span-2 sm:col-span-1">
+              <span className="font-mono text-[#737373] tracking-widest uppercase text-[11px] block">
+                [ DISPATCHES ]
+              </span>
+              <ul className="space-y-2.5">
+                <li>
+                  <a
+                    href="https://instagram.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#A8A8A8] hover:text-[#38BDF8] transition-colors uppercase tracking-wider inline-flex items-center gap-1"
+                  >
+                    Instagram <span>↗</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/RafifGantari/keigo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#A8A8A8] hover:text-[#38BDF8] transition-colors uppercase tracking-wider inline-flex items-center gap-1"
+                  >
+                    GitHub <span>↗</span>
+                  </a>
+                </li>
+                <li>
+                  <Link
+                    href="/sitemap.xml"
+                    className="text-[#737373] hover:text-white transition-colors uppercase tracking-wider"
+                  >
+                    Sitemap XML
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
           </div>
 
-          {/* Company & Standards */}
-          <div>
-            <h4 className="font-space-grotesk font-semibold text-sm tracking-wider uppercase text-[#BAE6FD] mb-4">
-              Standards
-            </h4>
-            <ul className="space-y-2.5 font-inter text-sm text-[#94A3B8]">
-              <li>
-                <Link href="/about" className="hover:text-[#F8FAFC] transition-colors">
-                  About KEIGO
-                </Link>
-              </li>
-              <li>
-                <Link href="/editorial-policy" className="hover:text-[#F8FAFC] transition-colors">
-                  Editorial Verification
-                </Link>
-              </li>
-              <li>
-                <Link href="/editorial-policy#risk-gate" className="hover:text-[#F8FAFC] transition-colors">
-                  Risk Gate Architecture
-                </Link>
-              </li>
-              <li>
-                <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#F8FAFC] transition-colors">
-                  Supabase Cloud DB
-                </a>
-              </li>
-            </ul>
-          </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#64748B] font-inter gap-4">
-          <p>© {new Date().getFullYear()} KEIGO Media. All rights reserved.</p>
-          <p className="tracking-wide">
-            Inspired by curiosity, rigorous investigation, and intellectual clarity.
+        {/* Bottom Bar: Clean & Minimal */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-[#737373] gap-4">
+          <p>© {new Date().getFullYear()} KEIGO. ALL RIGHTS RESERVED.</p>
+          <p className="tracking-widest uppercase text-[11px]">
+            CURIOSITY. CLARITY. DISCOVERY.
           </p>
         </div>
+
       </div>
     </footer>
   );

@@ -7,67 +7,62 @@ interface HeroArticleProps {
 
 export function HeroArticle({ article }: HeroArticleProps) {
   const categoryLabel = article.category.replace('_', ' ').toUpperCase();
-  const publishedDate = article.published_at 
-    ? new Date(article.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-    : 'Recently Published';
+  const year = article.published_at 
+    ? new Date(article.published_at).getFullYear() 
+    : '2026';
 
-  const displayImage = article.image_url || article.cover_image_url;
+  const heroImage = 
+    article.image_url || 
+    article.cover_image_url || 
+    'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1600&auto=format&fit=crop';
 
   return (
-    <article className="relative bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-6 sm:p-8 lg:p-10">
-        
-        {/* Left Column: Metadata & Title */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="flex items-center gap-3">
-            <span className="font-space-grotesk text-xs font-bold text-[#2563EB] tracking-wider uppercase">
-              {categoryLabel}
-            </span>
-            <span className="text-[#CBD5E1]">•</span>
-            <span className="font-inter text-xs text-[#64748B]">{publishedDate}</span>
-            <span className="text-[#CBD5E1]">•</span>
-            <span className="font-inter text-xs text-[#64748B]">{article.reading_time_minutes} min read</span>
+    <div className="w-full px-4 sm:px-8 lg:px-12 my-4 sm:my-6">
+      <Link
+        href={`/article/${article.slug}`}
+        className="group relative block w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-white/[0.12] bg-[#1C1C1C] aspect-[16/10] sm:aspect-[21/9] transition-all duration-700 hover:border-white/[0.25]"
+      >
+        {/* Full-Bleed Authentic News Photo */}
+        <img
+          src={heroImage}
+          alt={article.title}
+          className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-1000 ease-out brightness-[0.75] group-hover:brightness-[0.85]"
+        />
+
+        {/* Cinematic Vignette Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/40 to-transparent"></div>
+
+        {/* Viewfinder Header Badges */}
+        <div className="absolute top-5 sm:top-8 left-5 sm:left-8 right-5 sm:right-8 flex items-center justify-between text-xs font-space-grotesk tracking-widest text-white/80">
+          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-pulse"></span>
+            <span>{categoryLabel}</span>
           </div>
 
-          <h2 className="font-space-grotesk font-bold text-2xl sm:text-3xl lg:text-4xl text-[#172554] leading-[1.2] group-hover:text-[#2563EB] transition-colors">
-            <Link href={`/article/${article.slug}`}>
-              {article.title}
-            </Link>
+          <div className="text-white/60 tabular-nums font-mono text-xs">
+            [ {year} INVESTIGATION ]
+          </div>
+        </div>
+
+        {/* Content Lockup at Bottom */}
+        <div className="absolute bottom-5 sm:bottom-8 left-5 sm:left-8 right-5 sm:right-8 max-w-4xl space-y-3">
+          <h2 className="font-space-grotesk font-bold text-2xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[1.1] group-hover:text-[#38BDF8] transition-colors duration-300 uppercase">
+            {article.title}
           </h2>
 
-          <p className="font-inter text-base text-[#64748B] leading-relaxed line-clamp-3">
+          <p className="font-inter text-sm sm:text-base text-[#A8A8A8] line-clamp-2 max-w-3xl leading-relaxed">
             {article.excerpt}
           </p>
 
-          <div className="pt-2 flex items-center gap-4">
-            <Link
-              href={`/article/${article.slug}`}
-              className="inline-flex items-center gap-2 font-space-grotesk text-sm font-bold text-[#2563EB] hover:text-[#1E40AF] transition-colors"
-            >
-              Read Full Technical Analysis <span>➔</span>
-            </Link>
+          <div className="pt-2 flex items-center gap-3 text-xs font-space-grotesk uppercase tracking-wider text-white">
+            <span className="inline-flex items-center gap-2 group-hover:translate-x-1 transition-transform duration-300">
+              Read Investigation <span>➔</span>
+            </span>
+            <span className="text-white/30">•</span>
+            <span className="text-[#A8A8A8]">{article.reading_time_minutes} MIN READ</span>
           </div>
         </div>
-
-        {/* Right Column: Real Editorial Photo (Landscape) */}
-        <div className="lg:col-span-5 flex justify-center w-full">
-          <Link href={`/article/${article.slug}`} className="block relative w-full aspect-[16/10] rounded-xl overflow-hidden border border-[#E2E8F0] bg-[#F8FAFC]">
-            {displayImage ? (
-              <img
-                src={displayImage}
-                alt={article.title}
-                className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
-                loading="eager"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-[#F8FAFC] text-[#64748B] font-space-grotesk font-bold text-lg">
-                KEIGO
-              </div>
-            )}
-          </Link>
-        </div>
-
-      </div>
-    </article>
+      </Link>
+    </div>
   );
 }
