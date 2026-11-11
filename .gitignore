@@ -42,3 +42,7 @@ Thumbs.db
 # n8n local data / backups
 .n8n/
 n8n_data/
+
+# Generated Media Output
+services/visual/output/
+
