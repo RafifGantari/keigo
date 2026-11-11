@@ -9,116 +9,116 @@ export const metadata: Metadata = {
 
 export default function EditorialPolicyPage() {
   return (
-    <div className="max-w-4xl mx-auto px-6 sm:px-10 py-8 sm:py-16 space-y-16">
+    <div className="max-w-4xl mx-auto px-6 sm:px-10 py-8 sm:py-12 space-y-12">
       {/* Header */}
-      <header className="space-y-4 border-b border-white/[0.08] pb-10">
-        <span className="font-mono text-xs text-[#38BDF8] uppercase tracking-widest">
-          [ PROTOCOL SPECIFICATION ]
+      <header className="space-y-4 border-b border-[#E2E8F0] pb-8">
+        <span className="font-space-grotesk text-xs font-bold uppercase tracking-wider text-[#2563EB]">
+          EDITORIAL INTEGRITY
         </span>
-        <h1 className="font-space-grotesk font-bold text-4xl sm:text-6xl text-white tracking-tight uppercase">
+        <h1 className="font-space-grotesk font-bold text-4xl sm:text-5xl text-[#172554] tracking-tight">
           Editorial Standards & Risk Gate
         </h1>
-        <p className="font-inter text-xl text-[#A8A8A8] font-light">
-          Evidentiary hierarchy, automated audits, and primary verification protocols.
+        <p className="font-inter text-xl text-[#64748B] leading-relaxed">
+          How KEIGO ensures factual accuracy, technical depth, and transparent source attribution.
         </p>
       </header>
 
       {/* Main Principles */}
-      <div className="space-y-10 font-inter text-[#CCCCCC] text-base sm:text-lg leading-relaxed font-light">
+      <div className="space-y-8 font-inter text-[#334155] text-base sm:text-lg leading-relaxed">
         <section className="space-y-4">
-          <h2 className="font-space-grotesk font-bold text-2xl text-white uppercase tracking-tight">
+          <h2 className="font-space-grotesk font-bold text-2xl text-[#172554]">
             1. Primary Source Evidentiary Hierarchy
           </h2>
           <p>
             We adhere to a strict evidentiary standard. We do not recycle secondary blog posts or clickbait summaries. Every article must trace directly to:
           </p>
-          <ul className="space-y-3 font-mono text-xs sm:text-sm text-[#A8A8A8] pt-2">
-            <li className="p-4 rounded-xl border border-white/[0.08] bg-[#1C1C1C]">
-              <strong className="text-white uppercase font-space-grotesk block text-sm mb-1">Primary Tier A:</strong>
-              Peer-reviewed journal papers (Nature, Science, Cell, IEEE, ACM) and verified preprints (arXiv, bioRxiv).
+          <ul className="space-y-3 pt-2">
+            <li className="p-4 rounded-xl border border-[#E2E8F0] bg-white shadow-sm">
+              <strong className="text-[#172554] font-space-grotesk block text-sm mb-1">Primary Tier A:</strong>
+              <span className="text-sm text-[#475569]">Peer-reviewed journal papers (Nature, Science, Cell, IEEE, ACM) and verified preprints (arXiv, bioRxiv).</span>
             </li>
-            <li className="p-4 rounded-xl border border-white/[0.08] bg-[#1C1C1C]">
-              <strong className="text-white uppercase font-space-grotesk block text-sm mb-1">Primary Tier B:</strong>
-              Official engineering whitepapers and technical disclosures from frontier research labs (DeepMind, OpenAI, Anthropic, MIT CSAIL, CERN, NASA).
+            <li className="p-4 rounded-xl border border-[#E2E8F0] bg-white shadow-sm">
+              <strong className="text-[#172554] font-space-grotesk block text-sm mb-1">Primary Tier B:</strong>
+              <span className="text-sm text-[#475569]">Official engineering whitepapers and technical disclosures from frontier research labs (DeepMind, OpenAI, Anthropic, MIT CSAIL, CERN, NASA).</span>
             </li>
-            <li className="p-4 rounded-xl border border-white/[0.08] bg-[#1C1C1C]">
-              <strong className="text-white uppercase font-space-grotesk block text-sm mb-1">Primary Tier C:</strong>
-              Verified open-source code repositories, commit histories, benchmark logs, and pull request documentation.
+            <li className="p-4 rounded-xl border border-[#E2E8F0] bg-white shadow-sm">
+              <strong className="text-[#172554] font-space-grotesk block text-sm mb-1">Primary Tier C:</strong>
+              <span className="text-sm text-[#475569]">Verified open-source code repositories, commit histories, benchmark logs, and pull request documentation.</span>
             </li>
           </ul>
         </section>
 
-        <section id="risk-gate" className="space-y-6 pt-6 border-t border-white/[0.08]">
-          <h2 className="font-space-grotesk font-bold text-2xl text-white uppercase tracking-tight">
+        <section id="risk-gate" className="space-y-6 pt-6 border-t border-[#E2E8F0]">
+          <h2 className="font-space-grotesk font-bold text-2xl text-[#172554]">
             2. The 4-Stage Risk Gate Architecture
           </h2>
           <p>
-            Before any article is published, it passes through an automated 4-tier inspection:
+            Before any article can be marked as <code className="bg-[#EFF6FF] text-[#2563EB] px-2 py-0.5 rounded text-sm font-mono">published</code>, it must pass through an automated 4-tier inspection:
           </p>
 
           <div className="space-y-4 pt-2">
-            <div className="p-6 rounded-2xl border border-white/[0.08] bg-[#1C1C1C] space-y-2">
+            <div className="p-5 rounded-xl border border-[#E2E8F0] bg-white shadow-sm space-y-1">
               <div className="flex items-center justify-between">
-                <span className="font-space-grotesk font-bold text-sm text-white uppercase">
+                <h3 className="font-space-grotesk font-bold text-base text-[#172554]">
                   Stage 1: Source Completeness Audit
-                </span>
-                <span className="font-mono text-xs text-[#38BDF8]">[ PASS/FAIL ]</span>
+                </h3>
+                <span className="text-xs font-mono px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded font-semibold">PASS/FAIL</span>
               </div>
-              <p className="text-xs sm:text-sm text-[#A8A8A8]">
-                Ensures input is a full-text report or paper. If the input is merely a 1-sentence paywall teaser, it is held in <span className="font-mono text-amber-400">pending_review</span> to prevent hallucinations.
+              <p className="text-sm text-[#64748B]">
+                Ensures input is a full-text report or paper. If the input is merely a 1-sentence paywall teaser, it is held in <span className="font-mono text-amber-600">pending_review</span> to prevent hallucinations.
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl border border-white/[0.08] bg-[#1C1C1C] space-y-2">
+            <div className="p-5 rounded-xl border border-[#E2E8F0] bg-white shadow-sm space-y-1">
               <div className="flex items-center justify-between">
-                <span className="font-space-grotesk font-bold text-sm text-white uppercase">
+                <h3 className="font-space-grotesk font-bold text-base text-[#172554]">
                   Stage 2: Claim-Evidence Reconciliation
-                </span>
-                <span className="font-mono text-xs text-[#38BDF8]">[ PASS/FAIL ]</span>
+                </h3>
+                <span className="text-xs font-mono px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded font-semibold">PASS/FAIL</span>
               </div>
-              <p className="text-xs sm:text-sm text-[#A8A8A8]">
+              <p className="text-sm text-[#64748B]">
                 Cross-references every quantitative benchmark against the source document to eliminate hype and unsupported metrics.
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl border border-white/[0.08] bg-[#1C1C1C] space-y-2">
+            <div className="p-5 rounded-xl border border-[#E2E8F0] bg-white shadow-sm space-y-1">
               <div className="flex items-center justify-between">
-                <span className="font-space-grotesk font-bold text-sm text-white uppercase">
+                <h3 className="font-space-grotesk font-bold text-base text-[#172554]">
                   Stage 3: Technical Integrity & Clarity Score
-                </span>
-                <span className="font-mono text-xs text-[#38BDF8]">[ THRESHOLD ≥ 8.5/10 ]</span>
+                </h3>
+                <span className="text-xs font-mono px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded font-semibold">THRESHOLD ≥ 8.5/10</span>
               </div>
-              <p className="text-xs sm:text-sm text-[#A8A8A8]">
-                Evaluates architectural depth and explanatory value. If an explanation fails to illuminate how the mechanism functions, it is held.
+              <p className="text-sm text-[#64748B]">
+                Evaluates reading clarity, architectural accuracy, and explanatory value. If an explanation fails to illuminate how a mechanism functions, it is held.
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl border border-white/[0.08] bg-[#1C1C1C] space-y-2">
+            <div className="p-5 rounded-xl border border-[#E2E8F0] bg-white shadow-sm space-y-1">
               <div className="flex items-center justify-between">
-                <span className="font-space-grotesk font-bold text-sm text-white uppercase">
+                <h3 className="font-space-grotesk font-bold text-base text-[#172554]">
                   Stage 4: Media Verification & Context Integrity
-                </span>
-                <span className="font-mono text-xs text-[#38BDF8]">[ VERIFIED ]</span>
+                </h3>
+                <span className="text-xs font-mono px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded font-semibold">VERIFIED</span>
               </div>
-              <p className="text-xs sm:text-sm text-[#A8A8A8]">
+              <p className="text-sm text-[#64748B]">
                 Ensures high-resolution primary photography matches the investigated laboratory apparatus and includes precise contextual captioning.
               </p>
             </div>
           </div>
         </section>
 
-        <div className="pt-10 border-t border-white/[0.08] flex items-center justify-between font-mono text-xs">
+        <div className="pt-8 border-t border-[#E2E8F0] flex items-center justify-between">
           <Link
             href="/about"
-            className="text-[#38BDF8] hover:underline uppercase font-bold"
+            className="font-space-grotesk text-sm font-bold text-[#2563EB] hover:underline"
           >
-            ← Learn More About Our Manifesto
+            ← Learn More About Our Philosophy
           </Link>
           <Link
             href="/"
-            className="text-[#737373] hover:text-white uppercase"
+            className="font-space-grotesk text-sm font-bold text-[#64748B] hover:text-[#172554]"
           >
-            Back to Index
+            Back to Home
           </Link>
         </div>
       </div>

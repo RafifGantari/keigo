@@ -15,43 +15,43 @@ export function Footer() {
   ];
 
   return (
-    <footer className="w-full border-t border-white/[0.08] bg-[#121212] text-white pt-16 sm:pt-24 pb-12 mt-20">
+    <footer className="w-full border-t border-[#E2E8F0] bg-[#172554] text-[#F8FAFC] pt-16 sm:pt-20 pb-12 mt-16">
       <div className="w-full px-6 sm:px-10 lg:px-14">
         
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-white/[0.08]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-14 border-b border-white/10">
           
-          {/* Left: MilleDollars-style Split Brandmark Lockup */}
-          <div className="lg:col-span-6 flex flex-col justify-between space-y-8">
+          {/* Left: Brand Identity */}
+          <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
             <div>
-              <span className="font-space-grotesk font-bold text-4xl sm:text-6xl tracking-tighter text-white block">
-                KEIGO<span className="text-[#38BDF8]">.</span>
+              <span className="font-space-grotesk font-bold text-3xl sm:text-5xl tracking-tight text-[#F8FAFC] block">
+                KEIGO<span className="text-[#2563EB]">.</span>
               </span>
-              <p className="font-mono text-xs text-[#A8A8A8] uppercase tracking-widest mt-4 max-w-md leading-relaxed">
-                Autonomous science, artificial intelligence & deep technology intelligence. Based on primary documentation, verified preprints, and reproducible breakthroughs.
+              <p className="font-inter text-sm text-[#94A3B8] mt-3 max-w-md leading-relaxed">
+                Autonomous science, artificial intelligence & deep technology intelligence. Tracing breakthroughs directly to primary laboratory papers and engineering whitepapers.
               </p>
             </div>
 
-            <div className="flex items-center gap-3 text-xs font-mono text-[#38BDF8]">
-              <span className="w-2 h-2 rounded-full bg-[#38BDF8] animate-pulse"></span>
-              <span>AUTONOMOUS INGESTION ENGINE ACTIVE</span>
+            <div className="flex items-center gap-2.5 text-xs font-inter text-[#BAE6FD]">
+              <span className="w-2 h-2 rounded-full bg-[#2563EB] animate-pulse"></span>
+              <span>Research Pipeline Active</span>
             </div>
           </div>
 
           {/* Right Columns: Minimalist Navigation Grid */}
-          <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-8 text-xs font-space-grotesk">
+          <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-8 text-xs font-inter">
             
             {/* Pillars */}
-            <div className="space-y-4">
-              <span className="font-mono text-[#737373] tracking-widest uppercase text-[11px] block">
-                [ PILLARS ]
+            <div className="space-y-3.5">
+              <span className="font-space-grotesk font-semibold text-[#BAE6FD] tracking-wider uppercase text-xs block">
+                Pillars
               </span>
-              <ul className="space-y-2.5">
+              <ul className="space-y-2.5 text-[#94A3B8]">
                 {pillars.map((item) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="text-[#A8A8A8] hover:text-white transition-colors uppercase tracking-wider"
+                      className="hover:text-white transition-colors"
                     >
                       {item.name}
                     </Link>
@@ -61,16 +61,16 @@ export function Footer() {
             </div>
 
             {/* Verification */}
-            <div className="space-y-4">
-              <span className="font-mono text-[#737373] tracking-widest uppercase text-[11px] block">
-                [ PROTOCOLS ]
+            <div className="space-y-3.5">
+              <span className="font-space-grotesk font-semibold text-[#BAE6FD] tracking-wider uppercase text-xs block">
+                Standards
               </span>
-              <ul className="space-y-2.5">
+              <ul className="space-y-2.5 text-[#94A3B8]">
                 {standards.map((item) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="text-[#A8A8A8] hover:text-white transition-colors uppercase tracking-wider"
+                      className="hover:text-white transition-colors"
                     >
                       {item.name}
                     </Link>
@@ -80,17 +80,17 @@ export function Footer() {
             </div>
 
             {/* Channels */}
-            <div className="space-y-4 col-span-2 sm:col-span-1">
-              <span className="font-mono text-[#737373] tracking-widest uppercase text-[11px] block">
-                [ DISPATCHES ]
+            <div className="space-y-3.5 col-span-2 sm:col-span-1">
+              <span className="font-space-grotesk font-semibold text-[#BAE6FD] tracking-wider uppercase text-xs block">
+                Channels
               </span>
-              <ul className="space-y-2.5">
+              <ul className="space-y-2.5 text-[#94A3B8]">
                 <li>
                   <a
                     href="https://instagram.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#A8A8A8] hover:text-[#38BDF8] transition-colors uppercase tracking-wider inline-flex items-center gap-1"
+                    className="hover:text-white transition-colors inline-flex items-center gap-1"
                   >
                     Instagram <span>↗</span>
                   </a>
@@ -100,7 +100,7 @@ export function Footer() {
                     href="https://github.com/RafifGantari/keigo"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#A8A8A8] hover:text-[#38BDF8] transition-colors uppercase tracking-wider inline-flex items-center gap-1"
+                    className="hover:text-white transition-colors inline-flex items-center gap-1"
                   >
                     GitHub <span>↗</span>
                   </a>
@@ -108,7 +108,7 @@ export function Footer() {
                 <li>
                   <Link
                     href="/sitemap.xml"
-                    className="text-[#737373] hover:text-white transition-colors uppercase tracking-wider"
+                    className="hover:text-white transition-colors"
                   >
                     Sitemap XML
                   </Link>
@@ -121,10 +121,10 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar: Clean & Minimal */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-[#737373] gap-4">
-          <p>© {new Date().getFullYear()} KEIGO. ALL RIGHTS RESERVED.</p>
-          <p className="tracking-widest uppercase text-[11px]">
-            CURIOSITY. CLARITY. DISCOVERY.
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#64748B] font-inter gap-4">
+          <p>© {new Date().getFullYear()} KEIGO Media. All rights reserved.</p>
+          <p className="tracking-wide">
+            Curiosity. Clarity. Discovery.
           </p>
         </div>
 

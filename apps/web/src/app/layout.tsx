@@ -52,7 +52,7 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#161616] text-[#EDEDED] font-inter selection:bg-[#38bdf8] selection:text-[#000000]">
+      <body className="min-h-full flex flex-col bg-[#F8FAFC] text-[#172554] font-inter selection:bg-[#BAE6FD] selection:text-[#172554]">
         <Navbar />
         <main className="flex-1 w-full pt-20 sm:pt-24 pb-16">
           {children}

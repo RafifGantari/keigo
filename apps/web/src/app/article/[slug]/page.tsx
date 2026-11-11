@@ -54,12 +54,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   }
 
   const categoryLabel = article.category.replace('_', ' ').toUpperCase();
-  const year = article.published_at 
-    ? new Date(article.published_at).getFullYear() 
-    : '2026';
   const publishedDate = article.published_at
     ? new Date(article.published_at).toLocaleDateString('en-US', {
-        month: 'short',
+        month: 'long',
         day: 'numeric',
         year: 'numeric',
       })
@@ -79,66 +76,71 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     'Primary visual telemetry and physical architecture verified during technical investigation.';
 
   return (
-    <article className="max-w-5xl mx-auto px-6 sm:px-10 py-6 sm:py-10 space-y-12">
+    <article className="max-w-4xl mx-auto px-6 sm:px-10 py-6 sm:py-10 space-y-10">
       {/* 1. Header Metadata Bar */}
-      <nav className="flex items-center justify-between text-xs font-mono text-[#737373] border-b border-white/[0.08] pb-4">
+      <nav className="flex items-center justify-between text-xs font-inter text-[#64748B] border-b border-[#E2E8F0] pb-4">
         <div className="flex items-center gap-2">
-          <Link href="/" className="hover:text-white transition-colors">
-            INDEX
+          <Link href="/" className="hover:text-[#172554] transition-colors font-medium">
+            Home
           </Link>
-          <span>/</span>
+          <span className="text-[#CBD5E1]">/</span>
           <Link
             href={`/category/${article.category.replace('_', '-')}`}
-            className="text-[#38BDF8] hover:underline uppercase"
+            className="text-[#2563EB] font-bold uppercase tracking-wider"
           >
             {categoryLabel}
           </Link>
         </div>
 
-        <div className="flex items-center gap-4 text-[#A8A8A8]">
+        <div className="flex items-center gap-3 text-[#64748B]">
           <span>{publishedDate}</span>
-          <span>•</span>
-          <span>{article.reading_time_minutes} MIN READ</span>
+          <span className="text-[#CBD5E1]">•</span>
+          <span>{article.reading_time_minutes} min read</span>
         </div>
       </nav>
 
       {/* 2. Article Title & Excerpt */}
-      <header className="space-y-6">
-        <h1 className="font-space-grotesk font-bold text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[1.08] uppercase">
+      <header className="space-y-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EFF6FF] border border-[#BAE6FD] text-[#2563EB] text-xs font-space-grotesk font-semibold tracking-wider uppercase">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]"></span>
+          <span>{categoryLabel}</span>
+        </div>
+
+        <h1 className="font-space-grotesk font-bold text-3xl sm:text-5xl text-[#172554] tracking-tight leading-[1.12]">
           {article.title}
         </h1>
 
-        <p className="font-inter text-lg sm:text-xl text-[#A8A8A8] font-light leading-relaxed max-w-3xl">
+        <p className="font-inter text-lg sm:text-xl text-[#64748B] font-normal leading-relaxed pt-2">
           {article.excerpt}
         </p>
 
         {/* Verification Status Pill */}
-        <div className="pt-2 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[#737373]">
+        <div className="pt-4 flex flex-wrap items-center justify-between gap-4 text-xs font-inter text-[#64748B] border-t border-[#F1F5F9]">
           <div className="flex items-center gap-2">
-            <span className="text-white font-medium">KEIGO Research & Editorial</span>
-            <span>•</span>
-            <span>Dispatch #{year}</span>
+            <span className="text-[#172554] font-semibold">Reported by KEIGO Editorial</span>
+            <span className="text-[#CBD5E1]">•</span>
+            <span>Frontier Research Desk</span>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] text-[#38BDF8] text-[11px] font-space-grotesk uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-pulse"></span>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EFF6FF] border border-[#BAE6FD] text-[#2563EB] text-[11px] font-space-grotesk font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
             Peer-Source Audited
           </div>
         </div>
       </header>
 
       {/* 3. Framed Landscape Authentic News Photo + Context Caption Below */}
-      <figure className="space-y-3">
-        <div className="w-full aspect-[16/9] sm:aspect-[21/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/[0.12] bg-[#121212] relative group">
+      <figure className="space-y-3 my-6">
+        <div className="w-full aspect-[16/9] sm:aspect-[21/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E2E8F0] shadow-sm bg-[#FFFFFF] relative group">
           <img
             src={heroImage}
             alt={article.title}
-            className="w-full h-full object-cover group-hover:scale-[1.01] transition-transform duration-700 ease-out brightness-[0.88]"
+            className="w-full h-full object-cover group-hover:scale-[1.01] transition-transform duration-700 ease-out"
           />
         </div>
-        <figcaption className="text-xs font-mono text-[#737373] leading-relaxed flex items-start gap-2 px-1">
-          <span className="text-[#38BDF8] shrink-0 font-bold uppercase">
-            [ CONTEXT ]
+        <figcaption className="text-xs font-inter text-[#64748B] leading-relaxed flex items-start gap-2 px-1">
+          <span className="text-[#172554] font-semibold uppercase tracking-wider font-space-grotesk text-[11px] shrink-0">
+            Context:
           </span>
           <span>{heroCaption}</span>
         </figcaption>
@@ -146,13 +148,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
       {/* 4. Core Technical Takeaways */}
       {article.key_facts && article.key_facts.length > 0 && (
-        <section className="bg-[#1C1C1C] rounded-2xl border border-white/[0.08] p-6 sm:p-8 space-y-4">
-          <div className="flex items-center gap-2 font-mono text-xs text-[#38BDF8] uppercase tracking-widest">
-            <span>✺ KEY TECHNICAL TAKEAWAYS</span>
-          </div>
-          <ul className="space-y-3 text-sm text-[#D4D4D4] list-disc pl-5 font-inter">
+        <section className="bg-white rounded-2xl border border-[#E2E8F0] p-6 sm:p-8 space-y-3 shadow-sm">
+          <h4 className="font-space-grotesk font-bold text-sm tracking-wider uppercase text-[#172554]">
+            Core Technical Takeaways
+          </h4>
+          <ul className="space-y-2.5 text-sm text-[#334155] list-disc pl-5 font-inter leading-relaxed">
             {article.key_facts.map((fact: string, idx: number) => (
-              <li key={idx} className="leading-relaxed">
+              <li key={idx}>
                 {fact}
               </li>
             ))}
@@ -161,13 +163,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       )}
 
       {/* 5. Main Body Typography */}
-      <div className="space-y-6 text-[#D4D4D4] font-inter text-base sm:text-lg leading-relaxed pt-4 border-t border-white/[0.08]">
+      <div className="space-y-6 text-[#172554] font-inter text-base sm:text-lg leading-relaxed pt-2">
         {paragraphs.map((p: string, idx: number) => {
           if (p.startsWith('# ')) {
             return (
               <h2
                 key={idx}
-                className="font-space-grotesk font-bold text-2xl sm:text-3xl text-white pt-8 pb-2 uppercase tracking-tight"
+                className="font-space-grotesk font-bold text-2xl sm:text-3xl text-[#172554] pt-6 pb-2"
               >
                 {p.replace('# ', '')}
               </h2>
@@ -177,14 +179,14 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             return (
               <h3
                 key={idx}
-                className="font-space-grotesk font-bold text-xl sm:text-2xl text-white pt-6 pb-2 uppercase tracking-tight"
+                className="font-space-grotesk font-bold text-xl sm:text-2xl text-[#172554] pt-4 pb-2"
               >
                 {p.replace('## ', '')}
               </h3>
             );
           }
           return (
-            <p key={idx} className="text-[#CCCCCC] leading-relaxed font-light">
+            <p key={idx} className="text-[#334155] leading-relaxed font-normal">
               {p}
             </p>
           );
@@ -193,16 +195,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
       {/* 6. Primary Verified Sources Table */}
       {sources.length > 0 && (
-        <section className="bg-[#1C1C1C] rounded-2xl border border-white/[0.08] p-6 sm:p-8 space-y-4 my-10">
-          <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
-            <h4 className="font-space-grotesk font-bold text-sm tracking-wider uppercase text-white">
+        <section className="bg-white rounded-2xl border border-[#E2E8F0] p-6 sm:p-8 space-y-4 my-10 shadow-sm">
+          <div className="flex items-center justify-between pb-3 border-b border-[#F1F5F9]">
+            <h4 className="font-space-grotesk font-bold text-sm tracking-wider uppercase text-[#172554]">
               Primary Verified Sources
             </h4>
-            <span className="font-mono text-xs text-[#737373]">
-              Transparency Protocol
+            <span className="font-inter text-xs text-[#64748B]">
+              Editorial Transparency
             </span>
           </div>
-          <div className="divide-y divide-white/[0.06]">
+          <div className="divide-y divide-[#F1F5F9]">
             {sources.map((s, idx) => {
               let domain = s.source_url;
               try {
@@ -214,17 +216,17 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               return (
                 <div
                   key={idx}
-                  className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm"
+                  className="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm"
                 >
                   <div>
-                    <p className="font-medium text-white">{s.source_title}</p>
-                    <p className="font-mono text-xs text-[#737373] mt-0.5">{domain}</p>
+                    <p className="font-medium text-[#172554]">{s.source_title}</p>
+                    <p className="text-xs text-[#64748B] mt-0.5">{domain}</p>
                   </div>
                   <a
                     href={s.source_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-space-grotesk text-xs font-bold text-[#38BDF8] hover:underline inline-flex items-center gap-1 shrink-0 uppercase"
+                    className="font-space-grotesk text-xs font-bold text-[#2563EB] hover:underline inline-flex items-center gap-1 shrink-0"
                   >
                     Verify Source <span>➔</span>
                   </a>
@@ -236,19 +238,19 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       )}
 
       {/* 7. Verification Risk Gate Footer Card */}
-      <footer className="bg-[#161616] rounded-2xl border border-white/[0.08] p-6 sm:p-8 text-xs text-[#A8A8A8] space-y-3 font-inter">
-        <p className="font-space-grotesk font-bold text-sm text-white uppercase tracking-wider">
-          Editorial Standards & Verification
+      <footer className="bg-[#EFF6FF] rounded-2xl border border-[#BAE6FD] p-6 sm:p-8 text-xs text-[#1E40AF] space-y-2 font-inter">
+        <p className="font-space-grotesk font-bold text-sm text-[#172554]">
+          KEIGO Editorial & Verification Policy
         </p>
-        <p className="leading-relaxed text-[#737373]">
-          Every dispatch published by KEIGO undergoes multi-tier automated cross-source validation, claim verification, and factual audits against primary laboratory papers and engineering whitepapers.
+        <p className="text-[#334155] leading-relaxed">
+          Every story published by KEIGO undergoes automated cross-source validation, claim verification, and factual audits against primary laboratory papers and engineering whitepapers.
         </p>
         <div className="pt-2">
           <Link
             href="/editorial-policy"
-            className="text-[#38BDF8] font-space-grotesk font-bold hover:underline uppercase text-xs inline-flex items-center gap-1"
+            className="text-[#2563EB] font-semibold hover:underline"
           >
-            Read Full Risk Gate Specification <span>➔</span>
+            Read full Risk Gate specification →
           </Link>
         </div>
       </footer>
