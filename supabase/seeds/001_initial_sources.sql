@@ -26,6 +26,7 @@ VALUES
         'rss',
         'artificial_intelligence',
         'official',
+        true,
         120
     ),
     (
