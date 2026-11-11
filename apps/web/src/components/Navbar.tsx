@@ -69,7 +69,7 @@ export function Navbar() {
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 rounded-full bg-[#172554] text-[#F8FAFC] hover:bg-[#2563EB] text-xs font-semibold tracking-wider transition-all duration-200 shadow-sm"
+            className="px-4 py-2 rounded-lg bg-[#172554] text-[#F8FAFC] hover:bg-[#2563EB] text-xs font-semibold tracking-wider transition-all duration-200"
           >
             DISPATCH ↗
           </a>

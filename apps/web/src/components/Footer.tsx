@@ -32,8 +32,8 @@ export function Footer() {
               </p>
             </div>
 
-            <div className="flex items-center gap-2.5 text-xs font-inter text-[#BAE6FD]">
-              <span className="w-2 h-2 rounded-full bg-[#2563EB] animate-pulse"></span>
+            <div className="flex items-center gap-2 text-xs font-inter text-[#BAE6FD]">
+              <span className="font-mono text-[#2563EB] font-bold">//</span>
               <span>Research Pipeline Active</span>
             </div>
           </div>

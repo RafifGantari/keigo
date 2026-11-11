@@ -33,14 +33,13 @@ export function HeroArticle({ article }: HeroArticleProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/40 to-transparent"></div>
 
         {/* Viewfinder Header Badges */}
-        <div className="absolute top-5 sm:top-8 left-5 sm:left-8 right-5 sm:right-8 flex items-center justify-between text-xs font-space-grotesk tracking-widest text-white/80">
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-pulse"></span>
+        <div className="absolute top-5 sm:top-8 left-5 sm:left-8 right-5 sm:right-8 flex items-center justify-between text-xs font-space-grotesk tracking-widest text-white/90">
+          <div className="flex items-center gap-2 uppercase font-bold text-white text-xs">
             <span>{categoryLabel}</span>
           </div>
 
-          <div className="text-white/60 tabular-nums font-mono text-xs">
-            [ {year} INVESTIGATION ]
+          <div className="text-white/70 font-mono text-xs">
+            [ {year} ]
           </div>
         </div>
 

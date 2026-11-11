@@ -34,13 +34,13 @@ export function ArticleCard({ article, index }: ArticleCardProps) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#1C1C1C] via-transparent to-transparent opacity-80"></div>
         
-        {/* Floating index & category badge */}
-        <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-[11px] font-space-grotesk tracking-widest text-white/90">
-          <span className="px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 uppercase">
+        {/* Floating index & category */}
+        <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-xs font-space-grotesk tracking-widest text-white">
+          <span className="font-bold uppercase text-white drop-shadow">
             {categoryLabel}
           </span>
           {indexStr && (
-            <span className="font-mono text-white/50">{indexStr}</span>
+            <span className="font-mono text-white/70 drop-shadow">{indexStr}</span>
           )}
         </div>
       </Link>

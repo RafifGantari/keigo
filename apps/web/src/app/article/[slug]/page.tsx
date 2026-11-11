@@ -99,22 +99,21 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         </div>
       </nav>
 
-      {/* 2. Article Title & Excerpt */}
+      {/* 2. Article Title & Excerpt (Clean Typography, NO AI PILL) */}
       <header className="space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EFF6FF] border border-[#BAE6FD] text-[#2563EB] text-xs font-space-grotesk font-semibold tracking-wider uppercase">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]"></span>
-          <span>{categoryLabel}</span>
-        </div>
+        <span className="font-space-grotesk text-xs font-bold tracking-widest uppercase text-[#2563EB] block">
+          {categoryLabel}
+        </span>
 
         <h1 className="font-space-grotesk font-bold text-3xl sm:text-5xl text-[#172554] tracking-tight leading-[1.12]">
           {article.title}
         </h1>
 
-        <p className="font-inter text-lg sm:text-xl text-[#64748B] font-normal leading-relaxed pt-2">
+        <p className="font-inter text-lg sm:text-xl text-[#64748B] font-normal leading-relaxed pt-1">
           {article.excerpt}
         </p>
 
-        {/* Verification Status Pill */}
+        {/* Verification Status (Plain Typography, NO AI PILL) */}
         <div className="pt-4 flex flex-wrap items-center justify-between gap-4 text-xs font-inter text-[#64748B] border-t border-[#F1F5F9]">
           <div className="flex items-center gap-2">
             <span className="text-[#172554] font-semibold">Reported by KEIGO Editorial</span>
@@ -122,16 +121,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             <span>Frontier Research Desk</span>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EFF6FF] border border-[#BAE6FD] text-[#2563EB] text-[11px] font-space-grotesk font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span className="text-xs font-space-grotesk font-medium text-[#64748B] tracking-wide">
             Peer-Source Audited
-          </div>
+          </span>
         </div>
       </header>
 
       {/* 3. Framed Landscape Authentic News Photo + Context Caption Below */}
       <figure className="space-y-3 my-6">
-        <div className="w-full aspect-[16/9] sm:aspect-[21/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E2E8F0] shadow-sm bg-[#FFFFFF] relative group">
+        <div className="w-full aspect-[16/9] sm:aspect-[21/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E2E8F0] shadow-sm bg-white relative group">
           <img
             src={heroImage}
             alt={article.title}

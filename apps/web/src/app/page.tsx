@@ -18,10 +18,10 @@ export default async function HomePage() {
         </section>
       ) : (
         <section className="px-6 sm:px-12 py-24 text-center max-w-2xl mx-auto">
-          <div className="w-12 h-12 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center mx-auto mb-4 font-space-grotesk font-bold text-xl">
-            K
+          <div className="font-space-grotesk font-bold text-2xl text-[#2563EB] mb-3">
+            KEIGO.
           </div>
-          <h1 className="font-space-grotesk font-bold text-3xl sm:text-4xl text-[#172554] tracking-tight uppercase">
+          <h1 className="font-space-grotesk font-bold text-3xl sm:text-4xl text-[#172554] tracking-tight">
             Curiosity. Clarity. Discovery.
           </h1>
           <p className="font-inter text-[#64748B] text-base mt-3 leading-relaxed">
