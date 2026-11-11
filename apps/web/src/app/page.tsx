@@ -1,5 +1,5 @@
 import { getFeaturedArticle, getLatestArticles } from '@/lib/supabase';
-import { CinematicStoryFrame } from '@/components/CinematicStoryFrame';
+import { InfiniteStoryStream } from '@/components/InfiniteStoryStream';
 
 export default async function HomePage() {
   const featured = await getFeaturedArticle();
@@ -8,11 +8,9 @@ export default async function HomePage() {
   const allArticles = featured ? [featured, ...latestArticles] : latestArticles;
 
   return (
-    <div className="w-full h-screen h-dvh overflow-y-auto snap-y snap-mandatory scroll-smooth no-scrollbar bg-[#F8FAFC]">
+    <div className="w-full h-screen h-dvh overflow-hidden bg-[#F8FAFC]">
       {allArticles.length > 0 ? (
-        allArticles.map((article, idx) => (
-          <CinematicStoryFrame key={article.id} article={article} index={idx} />
-        ))
+        <InfiniteStoryStream articles={allArticles} />
       ) : (
         <section className="h-screen flex flex-col items-center justify-center p-6 text-center">
           <span className="font-space-grotesk font-bold text-3xl text-[#172554]">

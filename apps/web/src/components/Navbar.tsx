@@ -15,7 +15,7 @@ export function Navbar() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none w-full px-6 sm:px-12 py-5 sm:py-7 flex items-center justify-between text-xs tracking-wider transition-colors duration-300">
+    <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none w-full px-5 sm:px-12 py-4 sm:py-7 flex items-center justify-between text-xs tracking-wider transition-colors duration-300">
       {/* Brand Left: Pure Text */}
       <Link
         href="/"

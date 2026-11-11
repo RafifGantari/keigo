@@ -2,9 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getArticlesByCategory } from '@/lib/supabase';
-import { CinematicStoryFrame } from '@/components/CinematicStoryFrame';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
+import { InfiniteStoryStream } from '@/components/InfiniteStoryStream';
 import { ContentCategory } from '@/types';
 
 interface CategoryPageProps {
@@ -72,40 +70,25 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const articles = await getArticlesByCategory(categoryInfo.key, 24);
 
   return (
-    <div className="w-full min-h-screen bg-[#F8FAFC]">
-      <Navbar />
-
-      <header className="px-6 sm:px-12 py-4 max-w-4xl space-y-2">
-        <h1 className="font-space-grotesk font-bold text-3xl sm:text-5xl text-[#172554] tracking-tight">
-          {categoryInfo.name}
-        </h1>
-        <p className="font-inter text-sm sm:text-base text-[#64748B] font-normal max-w-2xl">
-          {categoryInfo.description}
-        </p>
-      </header>
-
-      {/* Visual Stream of Articles */}
+    <div className="w-full h-screen h-dvh overflow-hidden bg-[#F8FAFC]">
       {articles.length > 0 ? (
-        <section className="w-full">
-          {articles.map((article, idx) => (
-            <CinematicStoryFrame key={article.id} article={article} index={idx} />
-          ))}
-        </section>
+        <InfiniteStoryStream articles={articles} />
       ) : (
-        <div className="py-24 text-center max-w-xl mx-auto space-y-3">
-          <p className="font-space-grotesk font-bold text-xl text-[#172554]">
-            Stories in {categoryInfo.name} are being prepared.
+        <div className="h-screen flex flex-col items-center justify-center p-6 text-center max-w-xl mx-auto space-y-4">
+          <p className="font-space-grotesk font-bold text-2xl text-[#172554]">
+            {categoryInfo.name}
+          </p>
+          <p className="font-inter text-sm text-[#64748B] leading-relaxed">
+            Stories in this category are being prepared.
           </p>
           <Link
             href="/"
-            className="inline-block font-space-grotesk text-xs font-bold text-[#2563EB] hover:underline"
+            className="inline-block font-space-grotesk text-xs font-bold text-[#2563EB] hover:underline uppercase"
           >
-            ← Back to Homepage
+            ← Back to Stories
           </Link>
         </div>
       )}
-
-      <Footer />
     </div>
   );
 }
