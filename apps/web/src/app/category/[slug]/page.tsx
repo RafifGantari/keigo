@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getArticlesByCategory } from '@/lib/supabase';
 import { CinematicStoryFrame } from '@/components/CinematicStoryFrame';
+import { Navbar } from '@/components/Navbar';
 import { ContentCategory } from '@/types';
 
 interface CategoryPageProps {
@@ -70,26 +71,19 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const articles = await getArticlesByCategory(categoryInfo.key, 24);
 
   return (
-    <div className="w-full space-y-8 sm:space-y-12">
-      {/* Header */}
-      <header className="px-6 sm:px-10 lg:px-14 pb-6 border-b border-[#E2E8F0] max-w-4xl space-y-3">
-        <nav className="flex items-center gap-2 text-xs font-inter text-[#64748B]">
-          <Link href="/" className="hover:text-[#172554] transition-colors">
-            Home
-          </Link>
-          <span className="text-[#CBD5E1]">/</span>
-          <span className="text-[#2563EB] uppercase font-bold">{categoryInfo.name}</span>
-        </nav>
+    <div className="w-full min-h-screen bg-[#F8FAFC]">
+      <Navbar />
 
+      <header className="px-6 sm:px-12 py-4 max-w-4xl space-y-2">
         <h1 className="font-space-grotesk font-bold text-3xl sm:text-5xl text-[#172554] tracking-tight">
           {categoryInfo.name}
         </h1>
-        <p className="font-inter text-base sm:text-lg text-[#64748B] font-normal max-w-2xl leading-relaxed">
+        <p className="font-inter text-sm sm:text-base text-[#64748B] font-normal max-w-2xl">
           {categoryInfo.description}
         </p>
       </header>
 
-      {/* Visual Stream of Articles in Category */}
+      {/* Visual Stream of Articles */}
       {articles.length > 0 ? (
         <section className="w-full">
           {articles.map((article, idx) => (
@@ -97,12 +91,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           ))}
         </section>
       ) : (
-        <div className="bg-white rounded-2xl border border-[#E2E8F0] p-12 text-center max-w-xl mx-auto space-y-4 shadow-sm">
-          <p className="font-space-grotesk font-bold text-lg text-[#172554]">
-            Continuous Ingestion in Progress
-          </p>
-          <p className="font-inter text-sm text-[#64748B] leading-relaxed">
-            Our automated pipeline regularly indexes research feeds in {categoryInfo.name}. Stories passing our verification gate will appear here automatically.
+        <div className="py-24 text-center max-w-xl mx-auto space-y-3">
+          <p className="font-space-grotesk font-bold text-xl text-[#172554]">
+            Stories in {categoryInfo.name} are being prepared.
           </p>
           <Link
             href="/"

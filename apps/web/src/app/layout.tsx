@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -24,15 +22,15 @@ export const metadata: Metadata = {
     default: "KEIGO — Curiosity. Clarity. Discovery.",
   },
   description:
-    "Independent science, frontier AI, and deep technology intelligence publication.",
+    "Discover, research, and explore verified breakthroughs in Artificial Intelligence, Technology, Science, and Innovation.",
   keywords: [
     "Artificial Intelligence",
     "Quantum Computing",
-    "Autonomous Agents",
     "Science",
-    "Deep Technology",
+    "Technology",
+    "Innovation",
   ],
-  authors: [{ name: "KEIGO Editorial" }],
+  authors: [{ name: "KEIGO" }],
   openGraph: {
     title: "KEIGO — Curiosity. Clarity. Discovery.",
     description: "Deep technical journalism and verified breakthroughs in AI, Tech, Science, and Innovation.",
@@ -53,11 +51,9 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#F8FAFC] text-[#172554] font-inter selection:bg-[#BAE6FD] selection:text-[#172554]">
-        <Navbar />
-        <main className="flex-1 w-full pt-20 sm:pt-24 pb-16">
+        <main className="flex-1 w-full">
           {children}
         </main>
-        <Footer />
       </body>
     </html>
   );

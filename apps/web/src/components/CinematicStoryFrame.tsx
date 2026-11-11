@@ -20,52 +20,79 @@ export function CinematicStoryFrame({ article, index }: CinematicStoryFrameProps
   const indexStr = String(index + 1).padStart(2, '0');
 
   return (
-    <div className="w-full px-4 sm:px-8 lg:px-12 my-6 sm:my-10">
+    <div className="w-full h-[calc(100dvh-1.25rem)] sm:h-[calc(100dvh-1.75rem)] p-2 sm:p-3 flex flex-col justify-center">
       <Link
         href={`/article/${article.slug}`}
-        className="group relative block w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[#E2E8F0] bg-white aspect-[16/10] sm:aspect-[21/9] transition-all duration-500 hover:shadow-xl hover:border-[#2563EB]/40 shadow-sm"
+        className="group relative block w-full h-full rounded-[22px] sm:rounded-[32px] overflow-hidden border border-white/20 shadow-lg bg-[#172554]"
       >
-        {/* Full-Bleed Authentic News Photo */}
+        {/* Full 1 Screen Authentic Photo */}
         <img
           src={heroImage}
           alt={article.title}
-          className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+          className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-1000 ease-out"
         />
 
-        {/* Cinematic Vignette Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#172554]/95 via-[#172554]/30 to-black/35"></div>
+        {/* Subtle Vignette Overlay for Text Legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 pointer-events-none"></div>
 
-        {/* Viewfinder Top Editorial Typography (Pure Text, NO Pill, NO Capsules) */}
-        <div className="absolute top-6 sm:top-9 left-6 sm:left-10 right-6 sm:right-10 flex items-center justify-between text-xs font-space-grotesk tracking-widest text-[#F8FAFC]">
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-sm text-[#BAE6FD] font-bold">{indexStr}</span>
-            <span className="text-white/40 font-light">/</span>
-            <span className="font-bold tracking-wider uppercase text-white text-xs">{categoryLabel}</span>
-          </div>
+        {/* Top Corners: Pure Text Branding & Minimalist Nav */}
+        <div className="absolute top-6 sm:top-9 left-6 sm:left-12 right-6 sm:right-12 flex items-center justify-between text-white z-10 pointer-events-auto">
+          {/* Top Left: KEIGO. */}
+          <span className="font-space-grotesk font-bold text-2xl sm:text-3xl tracking-tight text-white">
+            KEIGO<span className="text-[#38BDF8]">.</span>
+          </span>
 
-          <div className="font-mono text-xs text-white/80 tracking-wider">
-            {year}
+          {/* Top Center: Minimal Tagline */}
+          <span className="hidden md:inline font-space-grotesk text-xs tracking-widest text-white/80 uppercase">
+            Curiosity • Clarity • Discovery
+          </span>
+
+          {/* Top Right: Pure text categories */}
+          <div className="flex items-center gap-6 sm:gap-8 font-space-grotesk text-xs tracking-wider text-white/90">
+            <span className="hidden sm:inline hover:text-white transition-colors uppercase">
+              {categoryLabel}
+            </span>
+            <span className="hover:text-white transition-colors uppercase">
+              {year}
+            </span>
           </div>
         </div>
 
-        {/* Content Lockup at Bottom */}
-        <div className="absolute bottom-6 sm:bottom-10 left-6 sm:left-10 right-6 sm:right-10 max-w-4xl space-y-3">
-          <h2 className="font-space-grotesk font-bold text-2xl sm:text-4xl lg:text-5xl text-[#F8FAFC] tracking-tight leading-[1.12] group-hover:text-[#BAE6FD] transition-colors duration-300 uppercase">
-            {article.title}
-          </h2>
-
-          <p className="font-inter text-xs sm:text-base text-[#E2E8F0] line-clamp-2 max-w-3xl leading-relaxed font-normal">
-            {article.excerpt}
-          </p>
-
-          <div className="pt-2 flex items-center gap-3 text-xs font-space-grotesk uppercase tracking-wider text-[#F8FAFC]">
-            <span className="inline-flex items-center gap-2 font-bold text-[#BAE6FD] group-hover:translate-x-1.5 transition-transform duration-300">
-              Read Technical Analysis <span>➔</span>
+        {/* Center Lateral Row: Index & Category on Left, Big Title on Right */}
+        <div className="absolute top-1/2 -translate-y-1/2 left-6 sm:left-12 right-6 sm:right-12 flex flex-col md:flex-row md:items-center justify-between gap-6 pointer-events-none">
+          {/* Left: Index & Category */}
+          <div className="flex items-center gap-4 text-white">
+            <span className="font-mono text-sm sm:text-base text-white/70 font-semibold">{indexStr}</span>
+            <span className="font-space-grotesk font-bold text-lg sm:text-2xl uppercase tracking-wider text-white">
+              {categoryLabel}
             </span>
-            <span className="text-white/40">•</span>
-            <span className="text-[#CBD5E1] font-mono text-[11px]">
-              {article.reading_time_minutes} MIN READ
-            </span>
+          </div>
+
+          {/* Right: Big Editorial Headline */}
+          <div className="text-left md:text-right max-w-2xl space-y-2">
+            <h2 className="font-space-grotesk font-bold text-2xl sm:text-3xl lg:text-5xl text-white uppercase tracking-tight leading-[1.1] group-hover:text-[#BAE6FD] transition-colors duration-300 drop-shadow-md">
+              {article.title}
+            </h2>
+            <p className="font-inter text-xs sm:text-sm text-white/85 line-clamp-2 max-w-xl md:ml-auto leading-relaxed hidden sm:block">
+              {article.excerpt}
+            </p>
+          </div>
+        </div>
+
+        {/* Bottom Corners: Vertical Navigation Left, Read Action Right */}
+        <div className="absolute bottom-6 sm:bottom-10 left-6 sm:left-12 right-6 sm:right-12 flex items-end justify-between text-white z-10 pointer-events-auto">
+          {/* Bottom Left: Vertical Minimalist Links (As in Milledollars screenshot) */}
+          <div className="flex flex-col text-[11px] font-space-grotesk tracking-widest text-white/80 space-y-1">
+            <span className="text-white font-bold mb-0.5">+ KEIGO</span>
+            <span className="hover:text-white transition-colors">AI & INTELLIGENCE</span>
+            <span className="hover:text-white transition-colors">FRONTIER TECH</span>
+            <span className="hover:text-white transition-colors">SCIENCE BREAKTHROUGHS</span>
+          </div>
+
+          {/* Bottom Right: Read Callout */}
+          <div className="font-space-grotesk text-xs sm:text-sm uppercase tracking-widest text-white font-bold group-hover:text-[#BAE6FD] flex items-center gap-2 transition-colors">
+            <span>READ STORY</span>
+            <span className="group-hover:translate-x-1.5 transition-transform duration-300">➔</span>
           </div>
         </div>
       </Link>
